@@ -1,0 +1,19 @@
+{
+    "name": "@emulatorjs/core-same_cdi",
+    "version": "4.2.3",
+    "type": "module",
+    "description": "EmulatorJS Core: same_cdi",
+    "homepage": "https://emulatorjs.org",
+    "license": "COPYING",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/EmulatorJS/same_cdi.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EmulatorJS/same_cdi/issues"
+    },
+    "sideEffects": true,
+    "dependencies": {
+        "@emulatorjs/emulatorjs": "latest"
+    }
+}
