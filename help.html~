@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>EmulatorJS Controls Manual</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0f14;
+      color: #e6eef6;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #2bd576;
+    }
+    .card {
+      background: #121821;
+      border: 1px solid #1f2834;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+    .keys {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    .keys li {
+      margin: 6px 0;
+    }
+    code {
+      background: #0d1320;
+      padding: 3px 6px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    footer {
+      font-size: 12px;
+      color: #8aa0b2;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>EmulatorJS Controls Manual</h1>
+  <p>
+    This guide explains the default keyboard controls for Game Boy Advance (GBA), 
+    Super Nintendo (SNES), and Game Boy Color (GBC) when using EmulatorJS. 
+    HTML5-based games may have their own control schemes, which can differ from these defaults.
+  </p>
+
+  <div class="card">
+    <h2>Pokemon and Zelda</h2>
+    <ul class="keys">
+      <li><b>A:</b> <code>Z</code></li>
+      <li><b>B:</b> <code>X</code></li>
+      <li><b>L:</b> <code>Q</code></li>
+      <li><b>R:</b> <code>E</code></li>
+      <li><b>Start:</b> <code>Enter</code></li>
+      <li><b>Select:</b> <code>V</code></li>
+      <li><b>D-Pad:</b> Arrow Keys</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Top Gear and NBA Jam</h2>
+    <ul class="keys">
+      <li><b>A:</b> <code>Z</code></li>
+      <li><b>B:</b> <code>X</code></li>
+      <li><b>X:</b> <code>A</code></li>
+      <li><b>Y:</b> <code>S</code></li>
+      <li><b>L:</b> <code>Q</code></li>
+      <li><b>R:</b> <code>E</code></li>
+      <li><b>Start:</b> <code>Enter</code></li>
+      <li><b>Select:</b> <code>V</code></li>
+      <li><b>D-Pad:</b> Arrow Keys</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Tetris</h2>
+    <ul class="keys">
+      <li><b>A:</b> <code>Z</code></li>
+      <li><b>B:</b> <code>X</code></li>
+      <li><b>Start:</b> <code>Enter</code></li>
+      <li><b>Select:</b> <code>V</code></li>
+      <li><b>D-Pad:</b> Arrow Keys</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Slope and Minecraft</h2>
+    <p>
+      HTML5-based games can use any control setup defined by the developer. 
+      Unlike console emulators, there is no universal standard. 
+      Always check the game’s instructions, as keys may differ or allow customization.
+    </p>
+  </div>
+
+  <footer>
+    Note: You can usually remap these keys in the EmulatorJS configuration if needed.
+  </footer>
+</body>
+</html>
+
