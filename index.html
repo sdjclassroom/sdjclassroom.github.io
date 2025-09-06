@@ -1,11 +1,40 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SDJ Classroom</title>
-  <meta name="description" content="Educational website desgined for the completion of school work." />
-  <meta name="author" content="OneHotDog1993" />
+  <head>
+  <!-- Basic HTML settings -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Site Information -->
+  <title>SDJ Classroom - Learn Coding and Computer Skills Interactively</title>
+  <meta name="author" content="OneHotDog1993 / SDJ Networking">
+
+  <!-- Description and Keywords for SEO & Filtering -->
+  <meta name="description" content="SDJ Classroom is an educational platform for students to learn coding, computer science, and problem-solving through interactive activities and classic software exercises.">
+  <meta name="keywords" content="education, learning, coding, programming, computer science, interactive lessons, student exercises, software skills, classroom learning, educational games, STEM">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="SDJ Classroom - Interactive Learning for Students">
+  <meta property="og:description" content="Learn programming and computer skills using engaging, interactive exercises and classic software simulations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sdjclassroom.github.io">
+  <meta property="og:image" content="https://sdjclassroom.github.io/assets/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SDJ Classroom - Interactive Learning for Students">
+  <meta name="twitter:description" content="A platform to learn coding and computer skills with interactive lessons and exercises.">
+  <meta name="twitter:image" content="https://sdjclassroom.github.io/assets/twitter-image.png">
+
+  <!-- Robots / Crawlers -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Optional Educational Tags -->
+  <meta name="audience" content="students, educators">
+  <meta name="subject" content="computer science, programming, STEM, interactive learning">
+
   <link rel="icon" href="/favicon.png" type="image/x-icon">
 
   <style>
@@ -181,20 +210,25 @@
 </head>
 <body>
 
-  <div class="wrap" role="document">
-    <header>
-      <div class="brand" aria-label="Site identity">
-        <div class="logo" aria-hidden="true">SDJ</div>
-        <div>
-          <h1>SDJ Classroom</h1>
-          <p class="sub">By OneHotDog1993</p>
+    <div class="wrap" role="document">
+      <header>
+        <div class="brand">
+          <!-- Replace text logo with favicon image -->
+          <div class="logo">
+            <img src="assets/favicon.png" alt="SDJ Classroom Logo" width="40" height="40">
+          </div>
+          <div>
+            <h1>SDJ Classroom</h1>
+            <p class="sub">By OneHotDog1993</p>
+          </div>
         </div>
-      </div>
 
-      <nav class="top-nav" aria-label="Primary navigation">
-        <a class="nav-btn" href="sethj152.github.io/sdjclassroom/help.html">How To Use</a>
-      </nav>
-    </header>
+        <nav class="top-nav" aria-label="Primary navigation">
+          <a class="nav-btn" href="sethj152.github.io/sdjclassroom/help.html">How To Use</a>
+        </nav>
+      </header>
+    </div>
+
 
     <section class="notice" role="region" aria-live="polite" aria-label="Service notice">
       <p>Welcome to SDJ Classroom. The perfect site to learn how to write computer software</p>
@@ -211,115 +245,128 @@
         <div class="softwares" aria-live="polite" aria-label="List of software">
           <!-- Pokémon Emerald -->
 
-          <article class="software" aria-labelledby="g-yoshi">
+          <article class="software">
             <h3 id="g-minecraft">Minecraft</h3>
+            <div class="meta">A great way to learn the basics of 3D modeling.</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <a class="btn play" href="/aboutus.html">Start</a>
               <a class="btn ghost" href="yoshi.html">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-yoshi">
+          <article class="software">
             <h3 id="g-slop">Slope</h3>
+            <div class="meta">Learn to build fast paced 3D software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <a class="btn play" href="/support.html">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-emerald">
+          <article class="software">
             <h3 id="g-emerald">Pokémon Emerald</h3>
-            <div class="meta"></div>
+            <div class="meta">Learn to make 2D retro style software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Pokemon Emerald.gba" data-core="gba" aria-label="Pokemon Emerald">Start</button>
+              <button class="btn play" data-rom="roms/Pokemon Emerald.gba" data-core="gba">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-zelda">
+          <article class="software">
             <h3 id="g-zelda">Zelda: The Minish Cap</h3>
+            <div class="meta">Learn to reverse engineer software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Zelda.gba" data-core="gba" aria-label="Zelda">Start</button>
+              <button class="btn play" data-rom="roms/Zelda.gba" data-core="gba">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-nba">
+          <article class="software">
             <h3 id="g-nba">NBA Jam</h3>
+            <div class="meta">Learn how to make multiuser software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/NBA Jam.sfc" data-core="snes" aria-label="NBA Jam">Start</button>
+              <button class="btn play" data-rom="roms/NBA Jam.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-tetris">
+          <article class="software">
             <h3 id="g-tetris">Tetris DX</h3>
+            <div class="meta">Build a puzzle app inspired by tetris</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Tetris.gbc" data-core="gb" aria-label="Tetris">Start</button>
+              <button class="btn play" data-rom="roms/Tetris.gbc" data-core="gb">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-topgear">
+          <article class="software">
             <h3 id="g-topgear">Top Gear</h3>
+            <div class="meta">Programming with variables</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Top Gear.sfc" data-core="snes" aria-label="Top Gear">Start</button>
+              <button class="btn play" data-rom="roms/Top Gear.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-yoshi">
+          <article class="software">
             <h3 id="g-yoshi">Yoshi's Island</h3>
+            <div class="meta">Momentum control agorithms</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Yoshi Island.sfc" data-core="snes" aria-label="Yoshi's Island">Start</button>
+              <button class="btn play" data-rom="roms/Yoshi Island.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-donkey">
+          <article class="software">
             <h3 id="g-yoshi">Donkey Kong Country</h3>
+            <div class="meta">Learn: Button Triggering</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Donkey Kong Country.sfc" data-core="snes" aria-label="Donkey Kong">Start</button>
+              <button class="btn play" data-rom="roms/Donkey Kong Country.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-sonic">
+          <article class="software">
             <h3 id="g-yoshi">Sonic The Hedgehog</h3>
+            <div class="meta">Fix the bugs in the program</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/sonic.md" data-core="sega-md" aria-label="Sonic">Start</button>
+              <button class="btn play" data-rom="roms/sonic.md" data-core="sega-md">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-tennis">
+          <article class="software">
             <h3 id="g-yoshi">Mario Tennis</h3>
+            <div class="meta">Educational tennis how-to</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Mario Tennis.gbc" data-core="gba" aria-label="Mario Tennis">Start</button>
+              <button class="btn play" data-rom="roms/Mario Tennis.gbc" data-core="gba">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-donkey">
+          <article class="software">
             <h3 id="g-yoshi">Sim City</h3>
+            <div class="meta">Learn how simulations work</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/simcity.sfc" data-core="snes" aria-label="Sim City">Start</button>
+              <button class="btn play" data-rom="roms/simcity.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-donkey">
+          <article class="software">
             <h3 id="g-yoshi">Super Mario World</h3>
+            <div class="meta">Build a 2D platform app</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/Super Mario World.sfc" data-core="snes" aria-label="Super Mario">Start</button>
+              <button class="btn play" data-rom="roms/Super Mario World.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
 
-          <article class="software" aria-labelledby="g-donkey">
+          <article class="software">
             <h3 id="g-yoshi">MVP Baseball</h3>
+            <div class="meta">Learn to turn apps into websites</div>
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn play" data-rom="roms/MVP Baseball.sfc" data-core="snes" aria-label="Baseball">Start</button>
+              <button class="btn play" data-rom="roms/MVP Baseball.sfc" data-core="snes">Start</button>
               <a class="btn ghost" href="">Details</a>
             </div>
           </article>
@@ -327,17 +374,17 @@
         </div>
       </div>
 
-      <div class="right" aria-label="Player and support column">
+      <div class="right">
         <div id="display" class="placeholder" role="region" aria-live="polite" aria-label="Software display area">
           Click Play to load a software into the embedded system. Uploads are disabled on this page.
         </div>
 
-        <div class="controls-row" aria-hidden="false">
+        <div class="controls-row">
           <button id="closeBtn" class="btn ghost" title="Close currently running software">Close software</button>
           <button id="returnBtn" class="btn ghost" title="Return to launcher">Return to launcher</button>
           <div style="margin-left:auto" class="small">Controls: <span style="font-family:var(--mono)">Z</span> = A, <span style="font-family:var(--mono)">X</span> = B, Arrows = DPad, Enter = Start</div>
         </div>
-      <div class="box" role="region" aria-label="Support">
+      <div class="box" role="region">
           <h4 style="margin:0 0 8px 0;color:var(--accent)">Support and contribution</h4>
           <p class="small">Our website is fully free for students and is a perfect educational site for learning how to build computer apps for windows and linux distrobutions. We encourage students to learn about the inner workings of older computer systems.</p>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
@@ -346,7 +393,7 @@
           </div>
         </div>
   <!-- Ad Box on the Right Side -->
-  <div class="box" role="region" aria-label="Advertisement">
+  <div class="box" role="region">
     <h3 style="margin:0 0 8px 0; text-align:center;">Sponsored</h3>
     <div id="frame" style="width:100%; margin:auto; background:rgba(0,0,0,0.50); border-radius:10px; padding:8px;">
       <div id="frame" style="width: 100%;margin: auto;background: rgba(0, 0, 0, 0.50);position: relative; z-index: 99998;">
