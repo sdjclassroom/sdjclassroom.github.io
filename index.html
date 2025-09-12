@@ -59,23 +59,32 @@
 
     /* reset */
     * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; background: linear-gradient(180deg, var(--bg), #021217 70%); color: #e9f7ef; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; -webkit-font-smoothing: antialiased; }
-  /* prevent body from scrolling; use internal scroll areas instead */
-  body { overflow: hidden; }
+  /* Apply stretched background image that covers the viewport */
+  html, body { height: 100%; margin: 0; color: #e9f7ef; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; -webkit-font-smoothing: antialiased; }
+  body {
+    background-image: url('assets/background.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    /* disable document-level scrolling; use column-level scrolling instead */
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; }
 
     /* layout container */
     .wrap {
-      width: min(calc(100vw - 32px), var(--max-site-width));
-      margin: 16px auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-      min-height: calc(100vh - 32px);
-      padding: 8px;
-      /* layout occupies full viewport so page itself doesn't scroll */
-      max-height: calc(100vh - 32px);
+  width: min(calc(100vw - 16px), var(--max-site-width));
+  margin: 8px auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-height: 100vh;
+  padding: 4px;
+  max-height: 100vh;
+  overflow: hidden;
     }
 
     header {
@@ -86,10 +95,11 @@
       flex-wrap: wrap;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-  .logo { width: clamp(44px, 8vw, 72px); height: clamp(44px, 8vw, 72px); border-radius: var(--radius); background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:900; color:#03261a; font-family: var(--mono); font-size: clamp(13px, 1.6vw, 22px); flex-shrink: 0; }
-    h1 { font-size: clamp(18px, 2.6vw, 28px); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sub { color: var(--muted); font-size: clamp(12px, 1.6vw, 14px); margin: 0; }
+    .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .logo { width: clamp(36px, 6.4vw, 64px); height: clamp(36px, 6.4vw, 64px); border-radius: calc(var(--radius) - 2px); background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:900; color:#03261a; font-family: var(--mono); font-size: clamp(12px, 1.4vw, 18px); flex-shrink: 0; }
+    /* visually hide the title while keeping accessible site name for screen readers */
+    .brand .site-title { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .brand .site-sub { display: none; }
 
     .top-nav { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
     .nav-btn {
@@ -110,48 +120,78 @@
 
     /* MAIN region */
     main {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--gap);
-      align-items: start;
-      min-height: calc(100% - 220px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  align-items: start;
+  min-height: 0;
+  height: 100%;
     }
 
-    /* larger screens: two column layout with flexible panels */
+    /* larger screens: two equal columns so emulator gets half the screen */
     @media (min-width: 900px) {
       main {
-        grid-template-columns:
-          minmax(var(--left-min), var(--left-pref))
-          minmax(var(--right-min), min(var(--right-pref), var(--right-max)));
-        height: calc(100% - 220px);
-        overflow: hidden;
+        /* favor the emulator on the right: left min area and right ~60% */
+        grid-template-columns: minmax(300px, 1fr) minmax(560px, 60%);
+        height: calc(100vh - 24px);
+        gap: 14px;
       }
-      /* make left column independently scrollable while the rest remains fixed */
       .left {
-        overflow: auto;
-        padding: 20px;
-        height: calc(100vh - 220px); /* leave space for header/footer and gaps */
+        overflow-y: auto;
+        padding: 16px;
+        min-height: 0;
+        height: 100%;
+        -webkit-overflow-scrolling: touch;
       }
-      .right {
-        padding: 20px;
-        height: calc(100vh - 220px);
+      /* left-column translucent card background */
+      .left-card {
+        background: rgba(20, 26, 30, 0.64); /* dark grey translucent */
+        backdrop-filter: blur(6px) saturate(110%);
+        -webkit-backdrop-filter: blur(6px) saturate(110%);
+        padding: 14px;
+        border-radius: calc(var(--radius) - 2px);
+        box-shadow: 0 8px 20px rgba(2,6,10,0.5);
+        border: 1px solid rgba(255,255,255,0.03);
+        height: 100%;
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 12px;
+        overflow: hidden; /* keep the internal .softwares grid as the scrollable area */
+      }
+      /* make the software list scroll within the card */
+      .left-card .softwares {
+        overflow: auto;
+        padding-bottom: 8px;
+      }
+      .right {
+        padding: 12px;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         flex-shrink: 0;
-        overflow: auto; /* allow controls or sponsored box to scroll if needed */
+        /* make right column fill vertical space so emulator can expand */
+        height: 100%;
+        overflow: hidden;
       }
     }
 
     /* mobile tweaks */
     @media (max-width: 899px) {
-      :root { --gap: 12px; }
-      .left, .right { padding: 12px; }
-      /* on smaller screens allow normal page scrolling for easier navigation */
-      body { overflow: auto; }
-      main { height: auto; }
-      .logo { margin-right: 6px; }
-      .help { text-align: left; }
+  :root { --gap: 8px; }
+  .left, .right { padding: 8px; }
+  body { overflow: auto; }
+  main { height: auto; min-height: 0; }
+  .logo { margin-right: 4px; }
+  .help { text-align: left; }
+  .left, .right { min-height: 0; }
+    }
+
+    /* two-up layout optimized for smaller desktops (700-899px) */
+    @media (min-width: 700px) and (max-width: 899px) {
+      .softwares { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .software { padding: 14px; min-height: 200px; }
+      .card-actions .btn { min-width: 92px; }
     }
 
     /* Search UI */
@@ -196,30 +236,87 @@
     .left h2 { margin-top: 0; font-size: clamp(18px, 2.2vw, 22px); }
     .left .small { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 
-    /* responsive grid for course cards */
-    .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  /* responsive grid for course cards */
+  .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
     .software {
       background: var(--card-gradient);
-      padding: 12px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
-      display: flex; flex-direction: column; gap: 8px; min-height: 110px;
+      padding: 18px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
+      display: flex; flex-direction: column; gap: 12px; min-height: 180px;
       box-shadow: 0 8px 20px rgba(2,8,10,0.45);
       transition: transform .12s ease, box-shadow .12s ease;
     }
     .software:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(2,8,10,0.55); }
-    .software h3 { margin: 0; font-size: clamp(15px, 1.8vw, 18px); overflow-wrap: anywhere; }
+    .software h3 { margin: 0; font-size: clamp(16px, 1.9vw, 20px); overflow-wrap: anywhere; }
     .software .meta { color: var(--muted); font-size: 13px; }
 
-    /* right column layout */
-    /* default emulator size: Game Boy Advance ratio (3:2) for a realistic display */
-    #display {
-      background: #000; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
-      display: flex; align-items: center; justify-content: center; overflow: hidden;
-      width: 100%;
-      aspect-ratio: 3/2; /* GBA native ratio */
-      min-height: 180px;
-      max-height: 100%;
-      height: clamp(220px, 44vh, 900px);
+    /* Action row inside software cards: keep buttons side-by-side on desktop; allow wrapping only on narrow screens */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: nowrap; /* keep side-by-side on larger screens */
     }
+    .card-actions .btn {
+      flex: 0 1 auto; /* natural sizing but don't force full expansion */
+      min-width: 100px; /* ensure usable tap targets */
+    }
+    /* Allow wrapping / stacking on narrow widths (mobile) */
+    @media (max-width: 600px) {
+      .card-actions { flex-wrap: wrap; }
+      .card-actions .btn { flex: 1 1 48%; min-width: 44%; }
+    }
+    @media (max-width: 420px) {
+      .card-actions { flex-direction: column; align-items: stretch; }
+      .card-actions .btn { width: 100%; }
+    }
+
+  /* right column layout */
+    /* default emulator size: Game Boy Advance ratio (3:2) for a realistic display */
+    /* Emulator display: maintain 3:2 GBA aspect ratio and contain internal scroll
+       - use an inner wrapper (.emulator-inner) with aspect-ratio so the outer #display
+         can be used for centering and small controls
+       - prevent touch/scroll events from bubbling to the document using overscroll-behavior
+    */
+    #display {
+      background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.6));
+      border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
+      display: flex; align-items: center; justify-content: center;
+      width: 100%;
+      padding: 8px;
+      overscroll-behavior: contain; /* keep page from scrolling when interacting with the emulator */
+      /* allow the display to grow to fill the right column */
+      flex: 1 1 auto;
+      min-height: 0;
+      /* ensure internal touches/scroll stay inside the card */
+      touch-action: none;
+    }
+
+    /* Inner fixed-aspect container - this is the area the emulator will render into */
+    .emulator-inner {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      aspect-ratio: 3/2; /* GBA native */
+      background: #000;
+      border-radius: calc(var(--radius) - 4px);
+      overflow: hidden; /* internal scrolling (if any) stays here) */
+      display: flex; align-items: center; justify-content: center;
+      min-height: 160px;
+      max-height: 100%;
+    }
+
+    /* ensure emulator content that needs to scroll does so internally */
+    .emulator-inner > * { overflow: auto; -webkit-overflow-scrolling: touch; }
+
+    /* while interacting with emulator, prevent the page from scrolling */
+    body.emulator-interact {
+      overflow: hidden !important;
+      touch-action: none !important;
+    }
+
+    /* When the emulator content is larger, allow internal scroll but don't let it bubble */
+    .emulator-inner > * { width: 100%; height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; }
     .placeholder { color: var(--muted); font-size: clamp(13px, 1.6vw, 15px); padding: 12px; text-align: center; }
 
     .btn {
@@ -251,7 +348,7 @@
   .box { background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.02); }
     .box h4 { margin: 0 0 8px 0; color: var(--accent); }
 
-    footer { margin-top: 8px; color: var(--muted); font-size: 13px; text-align: center; padding-bottom: 12px; }
+  /* footer removed intentionally for a cleaner UI */
 
     .left::-webkit-scrollbar { width: 10px; }
     .left::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 8px; }
@@ -298,32 +395,19 @@
 <body>
   <a class="sr-only" href="#main">Skip to content</a>
   <div class="wrap" role="document">
-    <header role="banner">
-      <div class="brand" aria-label="Site identity">
-        <div class="logo" aria-hidden="true">SDJ</div>
-        <div>
-          <h1>SDJ Classroom</h1>
-          <p class="sub">By OneHotDog1993</p>
-        </div>
-      </div>
-
-      <nav class="top-nav" aria-label="Primary navigation">
-        <a class="nav-btn" href="pages/help.html" role="link">How To Use</a>
-        <a class="nav-btn" href="pages/donate.html" role="link">Donate</a>
-      </nav>
-    </header>
 
 
   <main id="main" role="main" aria-labelledby="available-heading">
       <!-- LEFT column -->
       <div class="left" aria-label="softwares column" tabindex="0">
+        <div class="left-card">
         <div class="searchRow" role="search" aria-label="Search available courses">
           <div style="flex:0 0 auto;">
             <h2 id="available-heading" style="margin:0">Available Courses</h2>
             <div class="small" style="margin-top:6px;color:var(--muted)">Click Start to run the course.</div>
           </div>
 
-          <div style="min-width:260px; margin-left:auto;">
+          <div style="min-width:200px; margin-left:auto;" class="search-controls">
             <div class="search" title="Search courses">
               <input id="searchInput" type="search" placeholder="Search courses, e.g. 'Mario', '2D', 'simulation' — press / to focus" aria-label="Search courses" />
               <button class="clear" id="clearSearch" aria-label="Clear search">✕</button>
@@ -340,7 +424,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Minecraft" title="Favorite">☆</button>
             </div>
             <div class="meta">A great way to learn the basics of 3D modeling.</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <a class="btn play" href="pages/aboutus.html" role="button">Start</a>
               <a class="btn ghost" href="pages/aboutus.html">Download</a>
             </div>
@@ -352,7 +436,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Slope" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn to build fast paced 3D software</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <a class="btn play" href="pages/support.html" role="button">Start</a>
               <a class="btn ghost" href="pages/details/slope.html">Details</a>
             </div>
@@ -364,7 +448,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Pokémon Emerald" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn to make 2D retro style software</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Pokemon Emerald.gba" data-core="mgba" type="button">Start</button>
               <a class="btn ghost" href="roms/Pokemon Emerald.gba">Download</a>
             </div>
@@ -376,7 +460,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Zelda: The Minish Cap" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn to reverse engineer software</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Zelda.gba" data-core="mgba" type="button">Start</button>
               <a class="btn ghost" href="roms/Zelda.gba">Download</a>
             </div>
@@ -388,7 +472,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite NBA Jam" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn how to make multiuser software</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/NBA Jam.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/NBA Jam.sfc">Downloads</a>
             </div>
@@ -400,7 +484,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Tetris DX" title="Favorite">☆</button>
             </div>
             <div class="meta">Build a puzzle app inspired by tetris</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Tetris.gbc" data-core="gambatte" type="button">Start</button>
               <a class="btn ghost" href="roms/Tetris.gbc">Download</a>
             </div>
@@ -412,7 +496,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Top Gear" title="Favorite">☆</button>
             </div>
             <div class="meta">Programming with variables</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Top Gear.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/Top Gear.sfc">Downloads</a>
             </div>
@@ -424,7 +508,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Yoshi's Island" title="Favorite">☆</button>
             </div>
             <div class="meta">Momentum control algorithms</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Yoshi Island.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/Yoshi Island.sfc">Download</a>
             </div>
@@ -436,7 +520,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Donkey Kong Country" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn: Button Triggering</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Donkey Kong Country.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/Donkey Kong Country.sfc">Download</a>
             </div>
@@ -448,7 +532,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Sonic The Hedgehog" title="Favorite">☆</button>
             </div>
             <div class="meta">Fix the bugs in the program</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/sonic.md" data-core="sega-md" type="button">Start</button>
               <a class="btn ghost" href="roms/sonic.md">Download</a>
             </div>
@@ -460,7 +544,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Mario Tennis" title="Favorite">☆</button>
             </div>
             <div class="meta">Educational tennis how-to</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Mario Tennis.gbc" data-core="mgba" type="button">Start</button>
               <a class="btn ghost" href="roms/Mario Tennis.gbc">Download</a>
             </div>
@@ -472,7 +556,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Sim City" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn how simulations work</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/simcity.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/simcity.sfc">Details</a>
             </div>
@@ -484,7 +568,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Super Mario World" title="Favorite">☆</button>
             </div>
             <div class="meta">Build a 2D platform app</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/Super Mario World.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/Super Mario World.sfc">Download</a>
             </div>
@@ -496,7 +580,7 @@
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite MVP Baseball" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn to turn apps into websites</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="card-actions">
               <button class="btn play" data-rom="roms/MVP Baseball.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/MVP Baseball.sfc">Downloads</a>
             </div>
@@ -504,6 +588,7 @@
         </div>
 
         <div class="no-results" id="noResults">No courses match your search.</div>
+        </div>
       </div>
 
       <!-- RIGHT column -->
@@ -519,17 +604,11 @@
           <div style="margin-left:auto" class="small">Controls: <span style="font-family:var(--mono)">Z</span> = A, <span style="font-family:var(--mono)">X</span> = B, Arrows = DPad, Enter = Start</div>
         </div>
 
-        <div class="box" role="region" aria-label="Sponsored">
-          <h3 style="margin:0 0 8px 0; text-align:center;">Sponsored</h3>
-          <div style="width:100%; margin:auto; background:rgba(0,0,0,0.50); border-radius:10px; padding:8px;">
-            <iframe data-aa='2409325' src='https://acceptable.a-ads.com/2409325/?size=Adaptive'
-                    style='border:0; padding:0; width:100%; height:120px; overflow:hidden; display:block; margin:auto' title="Sponsored content"></iframe>
-          </div>
-        </div>
+        <!-- Ad removed: emulator now occupies the full right column -->
       </div>
     </main>
 
-  <footer>Find the source code <a href="https://github.com/sdjclassroom/sdjclassroom.github.io" target="_blank" rel="noopener noreferrer">on GitHub</a></footer>
+  <!-- footer intentionally removed -->
   </div>
 
   <script>
@@ -621,18 +700,39 @@
 
       function loadEmulator({ rom, core, name }) {
         if (!rom) return;
+        // ensure outer display is prepared
         display.classList.remove('placeholder');
-        display.innerHTML = '<div style="font-family:var(--mono);color:var(--muted);font-size:13px">Loading ' + (name || rom) + '...</div>';
         clearPreviousLoader();
 
-        const softwareDiv = document.createElement('div');
-        softwareDiv.id = 'software';
-        softwareDiv.style.width = '100%';
-        softwareDiv.style.height = '100%';
-        display.innerHTML = '';
-        display.appendChild(softwareDiv);
+        // create inner aspect container if not present
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
 
-        window.EJS_player = '#software';
+        // show a small loading message centered inside the emulator-inner
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading ' + (name || rom) + '...';
+        inner.appendChild(loading);
+
+  // target the emulator container inside the inner aspect box
+  // create the software container where EmulatorJS will render
+  const softwareDiv = document.createElement('div');
+  softwareDiv.id = 'software';
+  softwareDiv.style.width = '100%';
+  softwareDiv.style.height = '100%';
+  softwareDiv.style.display = 'block';
+  // clear loading placeholder and mount the player
+  inner.innerHTML = '';
+  inner.appendChild(softwareDiv);
+
+  window.EJS_player = '#software';
         window.EJS_softwareName = name || rom;
         window.EJS_biosUrl = '';
         window.EJS_gameUrl = rom;
@@ -692,18 +792,40 @@
       document.getElementById('closeBtn').addEventListener('click', () => {
         clearPreviousLoader();
         display.classList.add('placeholder');
-        display.innerHTML = 'Click Play to load a software into the embedded emulator. Uploads are disabled on this page.';
+        // keep the emulator-inner container but reset its content to a friendly message
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        }
+        inner.innerHTML = '<div style="color:var(--muted);font-family:var(--mono);padding:12px;text-align:center;">Click Play to load a software into the embedded emulator. Uploads are disabled on this page.</div>';
       });
 
       document.getElementById('returnBtn').addEventListener('click', () => {
         clearPreviousLoader();
         display.classList.add('placeholder');
-        display.innerHTML = 'Click Play to load a software into the embedded emulator. Uploads are disabled on this page.';
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        }
+        inner.innerHTML = '<div style="color:var(--muted);font-family:var(--mono);padding:12px;text-align:center;">Click Play to load a software into the embedded emulator. Uploads are disabled on this page.</div>';
         if (window.innerWidth >= 900) {
           const left = document.querySelector('.left');
-          if (left) left.focus();
+          if (left) {
+            left.focus();
+            left.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const left = document.querySelector('.left');
+          if (left) {
+            left.focus();
+            left.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         }
       });
 
@@ -785,6 +907,50 @@
         } else {
           filterSoftwares('');
         }
+      })();
+
+      // Ensure wheel/touch scrolling inside emulator does not bubble to the page
+      (function trapEmulatorScroll() {
+        const preventScroll = (ev) => {
+          // If the target is inside emulator-inner, stop propagation so the body doesn't scroll
+          ev.stopPropagation();
+        };
+
+        function addTrap(el) {
+          if (!el) return;
+          // Wheel events
+          el.addEventListener('wheel', (e) => {
+            // Allow the element to scroll internally; prevent the page from scrolling
+            e.stopPropagation();
+          }, { passive: false });
+
+          // Touch move
+          el.addEventListener('touchstart', () => document.body.classList.add('emulator-interact'), { passive: true });
+          el.addEventListener('touchend', () => document.body.classList.remove('emulator-interact'));
+          el.addEventListener('touchmove', (e) => {
+            e.stopPropagation();
+          }, { passive: false });
+
+          // Pointer enter/leave to set a body class that disables page scroll
+          el.addEventListener('pointerenter', () => document.body.classList.add('emulator-interact'));
+          el.addEventListener('pointerleave', () => document.body.classList.remove('emulator-interact'));
+        }
+
+        // dynamic: attach trap when emulator-inner is created
+        const observer = new MutationObserver((mutations) => {
+          for (const m of mutations) {
+            for (const node of m.addedNodes) {
+              if (!(node instanceof HTMLElement)) continue;
+              if (node.classList && node.classList.contains('emulator-inner')) addTrap(node);
+              // also check descendants
+              node.querySelectorAll && node.querySelectorAll('.emulator-inner').forEach(addTrap);
+            }
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // attach to any existing emulator-inner now
+        document.querySelectorAll('.emulator-inner').forEach(addTrap);
       })();
 
       // Expose for debugging if needed
