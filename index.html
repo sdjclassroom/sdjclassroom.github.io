@@ -5,6 +5,14 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="canonical" href="https://sdjclassroom.github.io/" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SDJ Classroom - Learn Coding and Computer Skills Interactively" />
+  <meta property="og:description" content="SDJ Classroom is an educational platform for students to learn coding, computer science, and problem-solving through interactive activities and classic software exercises." />
+  <meta property="og:url" content="https://sdjclassroom.github.io/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#021217" />
 
   <!-- Site Information -->
   <title>SDJ Classroom - Learn Coding and Computer Skills Interactively</title>
@@ -17,11 +25,23 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="manifest" href="assets/site.webmanifest">
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SDJ Classroom",
+    "url": "https://sdjclassroom.github.io/",
+    "description": "Interactive lessons and classic software exercises for learning coding and computer skills."
+  }
+  </script>
+
   <style>
     :root{
       --bg: #021217;
       --panel: #08121a;
       --card: #07121a;
+      --card-bg: #0b3b47; /* distinct card background */
+      --card-gradient: linear-gradient(180deg, #0f4d5a, #07292e);
       --muted: #98b8c6;
       --accent: #1fbf76;
       --accent-2: #0fa564;
@@ -29,20 +49,23 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
       --gap: 18px;
       --max-site-width: 1400px;
-      --left-min: 280px;
-      --right-min: 360px;
-      --left-pref: 42%;
-      --right-pref: 58%;
-      --right-max: 900px;
+      --left-min: 220px;
+      --right-min: 300px;
+      --left-pref: 40%;
+      --right-pref: 60%;
+      --right-max: 1000px;
       --shadow: 0 10px 30px rgba(2,6,10,0.55);
     }
 
     /* reset */
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; background: linear-gradient(180deg, var(--bg), #021217 70%); color: #e9f7ef; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; -webkit-font-smoothing: antialiased; }
+  html, body { height: 100%; margin: 0; background: linear-gradient(180deg, var(--bg), #021217 70%); color: #e9f7ef; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; -webkit-font-smoothing: antialiased; }
+  /* prevent body from scrolling; use internal scroll areas instead */
+  body { overflow: hidden; }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; }
 
+    /* layout container */
     .wrap {
       width: min(calc(100vw - 32px), var(--max-site-width));
       margin: 16px auto;
@@ -50,6 +73,9 @@
       flex-direction: column;
       gap: var(--gap);
       min-height: calc(100vh - 32px);
+      padding: 8px;
+      /* layout occupies full viewport so page itself doesn't scroll */
+      max-height: calc(100vh - 32px);
     }
 
     header {
@@ -61,16 +87,17 @@
     }
 
     .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .logo { width: clamp(48px, 6vw, 72px); height: clamp(48px, 6vw, 72px); border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:900; color:#03261a; font-family: var(--mono); font-size: clamp(14px, 1.4vw, 22px); }
+  .logo { width: clamp(44px, 8vw, 72px); height: clamp(44px, 8vw, 72px); border-radius: var(--radius); background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:900; color:#03261a; font-family: var(--mono); font-size: clamp(13px, 1.6vw, 22px); flex-shrink: 0; }
     h1 { font-size: clamp(18px, 2.6vw, 28px); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sub { color: var(--muted); font-size: clamp(12px, 1.6vw, 14px); margin: 0; }
 
     .top-nav { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
     .nav-btn {
-      appearance: none; border: 0; padding: 8px 12px; border-radius: 999px;
+      appearance: none; border: 0; padding: 8px 12px; border-radius: var(--radius);
       background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.03);
       cursor: pointer; font-weight: 800; font-family: var(--mono); font-size: 13px;
     }
+    .nav-btn:hover { background: rgba(255,255,255,0.02); }
     .nav-btn:focus { outline: 3px solid rgba(31,191,118,0.14); outline-offset: 3px; }
 
     .notice {
@@ -90,6 +117,7 @@
       min-height: calc(100% - 220px);
     }
 
+    /* larger screens: two column layout with flexible panels */
     @media (min-width: 900px) {
       main {
         grid-template-columns:
@@ -98,24 +126,32 @@
         height: calc(100% - 220px);
         overflow: hidden;
       }
+      /* make left column independently scrollable while the rest remains fixed */
       .left {
         overflow: auto;
         padding: 20px;
-        height: 100%;
+        height: calc(100vh - 220px); /* leave space for header/footer and gaps */
       }
       .right {
         padding: 20px;
-        height: 100%;
+        height: calc(100vh - 220px);
         display: flex;
         flex-direction: column;
         gap: 14px;
         flex-shrink: 0;
+        overflow: auto; /* allow controls or sponsored box to scroll if needed */
       }
     }
 
+    /* mobile tweaks */
     @media (max-width: 899px) {
-      .left, .right { padding: 14px; }
+      :root { --gap: 12px; }
+      .left, .right { padding: 12px; }
+      /* on smaller screens allow normal page scrolling for easier navigation */
+      body { overflow: auto; }
       main { height: auto; }
+      .logo { margin-right: 6px; }
+      .help { text-align: left; }
     }
 
     /* Search UI */
@@ -124,6 +160,7 @@
       gap:8px;
       align-items:center;
       margin-bottom: 12px;
+      width: 100%;
     }
     .search {
       flex: 1 1 auto;
@@ -132,7 +169,7 @@
       gap:8px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
       padding: 8px;
-      border-radius: 999px;
+      border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,0.04);
     }
     .search input {
@@ -143,6 +180,7 @@
       padding: 8px;
       outline: none;
       width:100%;
+      min-width: 80px;
     }
     .search button.clear {
       background: transparent;
@@ -158,41 +196,59 @@
     .left h2 { margin-top: 0; font-size: clamp(18px, 2.2vw, 22px); }
     .left .small { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 
-    .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    /* responsive grid for course cards */
+    .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .software {
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-      padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.02);
+      background: var(--card-gradient);
+      padding: 12px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
       display: flex; flex-direction: column; gap: 8px; min-height: 110px;
+      box-shadow: 0 8px 20px rgba(2,8,10,0.45);
+      transition: transform .12s ease, box-shadow .12s ease;
     }
+    .software:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(2,8,10,0.55); }
     .software h3 { margin: 0; font-size: clamp(15px, 1.8vw, 18px); overflow-wrap: anywhere; }
     .software .meta { color: var(--muted); font-size: 13px; }
 
     /* right column layout */
+    /* default emulator size: Game Boy Advance ratio (3:2) for a realistic display */
     #display {
-      background: #000; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);
+      background: #000; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
       display: flex; align-items: center; justify-content: center; overflow: hidden;
       width: 100%;
-      aspect-ratio: 16/9;
-      min-height: 50%;
+      aspect-ratio: 3/2; /* GBA native ratio */
+      min-height: 180px;
       max-height: 100%;
-      height: clamp(260px, 48vh, 900px);
+      height: clamp(220px, 44vh, 900px);
     }
     .placeholder { color: var(--muted); font-size: clamp(13px, 1.6vw, 15px); padding: 12px; text-align: center; }
 
     .btn {
-      -webkit-appearance: none; appearance: none; border: 0; padding: 10px 14px; border-radius: 999px;
+      -webkit-appearance: none; appearance: none; border: 0; padding: 10px 14px; border-radius: var(--radius);
       font-weight: 900; font-family: var(--mono); cursor: pointer; font-size: 13px;
       box-shadow: 0 6px 18px rgba(4,10,8,0.25); transition: transform .1s ease, box-shadow .12s ease, background .12s ease;
       touch-action: manipulation;
     }
     .btn.play { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color: #022b1d; }
     .btn.ghost { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.03); }
+    .btn:hover { filter: brightness(1.04); }
     .btn:active { transform: translateY(1px); }
     .btn:focus { outline: 3px solid rgba(31,191,118,0.12); outline-offset: 3px; }
 
+    /* favorite button styling */
+    .fav-btn {
+      min-width: 38px; min-height: 38px; padding: 6px 10px; display:inline-flex; align-items:center; justify-content:center;
+      border-radius: var(--radius); font-size: 18px; line-height: 1; background: transparent; color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .fav-btn[aria-pressed="true"] {
+      background: linear-gradient(180deg,#ffb04d,#ff8f2f); color: #3c1f00; border-color: rgba(255,140,30,0.28);
+      box-shadow: 0 6px 20px rgba(255,140,30,0.12) inset;
+    }
+
     .controls-row { display:flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
-    .box { background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); }
+  .box { background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.02); }
     .box h4 { margin: 0 0 8px 0; color: var(--accent); }
 
     footer { margin-top: 8px; color: var(--muted); font-size: 13px; text-align: center; padding-bottom: 12px; }
@@ -209,11 +265,40 @@
 
     .no-results { padding: 12px; color: var(--muted); text-align:center; display:none; }
     :focus { outline-offset: 3px; }
+
+    /* assistive utilities */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* make iframes inside boxes responsive */
+  /* ad iframe keep 16:9 aspect ratio */
+  .box iframe { width: 100%; aspect-ratio: 16/9; height: auto; border: 0; display: block; }
+
+    /* visual feedback when dragging files */
+    .drag-over { box-shadow: 0 0 0 4px rgba(31,191,118,0.06) inset; border-color: rgba(31,191,118,0.12); }
+
+    /* Fullscreen styles for emulator */
+    :fullscreen #display,
+    :-webkit-full-screen #display {
+      width: 100vw !important;
+      height: 100vh !important;
+      aspect-ratio: auto !important;
+      border-radius: 0 !important;
+      max-height: none !important;
+      display: flex; align-items: center; justify-content: center;
+      background: #000;
+    }
+
+    /* Keep controls visible when in fullscreen - place them at top */
+    :fullscreen .controls-row,
+    :-webkit-full-screen .controls-row {
+      position: fixed; top: 8px; left: 8px; right: 8px; z-index: 9999; display: flex; gap:8px; background: rgba(0,0,0,0.28); padding:8px; border-radius: 8px;
+    }
   </style>
 </head>
 <body>
+  <a class="sr-only" href="#main">Skip to content</a>
   <div class="wrap" role="document">
-    <header>
+    <header role="banner">
       <div class="brand" aria-label="Site identity">
         <div class="logo" aria-hidden="true">SDJ</div>
         <div>
@@ -223,13 +308,13 @@
       </div>
 
       <nav class="top-nav" aria-label="Primary navigation">
-        <a class="nav-btn" href="pages/help.html">How To Use</a>
-        <a class="nav-btn" href="pages/donate.html">Donate</a>
+        <a class="nav-btn" href="pages/help.html" role="link">How To Use</a>
+        <a class="nav-btn" href="pages/donate.html" role="link">Donate</a>
       </nav>
     </header>
 
 
-    <main id="main" aria-labelledby="available-heading">
+  <main id="main" role="main" aria-labelledby="available-heading">
       <!-- LEFT column -->
       <div class="left" aria-label="softwares column" tabindex="0">
         <div class="searchRow" role="search" aria-label="Search available courses">
@@ -247,28 +332,25 @@
           </div>
         </div>
 
-        <div class="softwares" aria-live="polite" aria-label="List of software" id="softwareList">
+  <div class="softwares" aria-live="polite" aria-label="List of software" id="softwareList">
           <!-- Course cards -->
-          <article class="software">
-            <h3>Minecraft</h3>
+          <article class="software" role="article" aria-labelledby="title-minecraft" data-key="minecraft">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-minecraft">Minecraft</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Minecraft" title="Favorite">☆</button>
+            </div>
             <div class="meta">A great way to learn the basics of 3D modeling.</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <a class="btn play" href="pages/aboutus.html" role="button">Start</a>
-              <a class="btn ghost" href="pages/details/minecraft.html">Details</a>
+              <a class="btn ghost" href="pages/aboutus.html">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Dinosaur</h3>
-            <div class="meta">A great way to learn the basics of 2D modeling.</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <a class="btn play" href="pages/dino.html" role="button">Start</a>
-              <a class="btn ghost" href="pages/details/dinosaur.html">Details</a>
+          <article class="software" role="article" aria-labelledby="title-slope" data-key="slope">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-slope">Slope</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Slope" title="Favorite">☆</button>
             </div>
-          </article>
-
-          <article class="software">
-            <h3>Slope</h3>
             <div class="meta">Learn to build fast paced 3D software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <a class="btn play" href="pages/support.html" role="button">Start</a>
@@ -276,111 +358,147 @@
             </div>
           </article>
 
-          <article class="software">
-            <h3>Pokémon Emerald</h3>
+          <article class="software" role="article" aria-labelledby="title-pokemon-emerald" data-key="pokemon-emerald">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-pokemon-emerald">Pokemon Emerald</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Pokémon Emerald" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn to make 2D retro style software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Pokemon Emerald.gba" data-core="mgba" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/emerald.html">Details</a>
+              <a class="btn ghost" href="roms/Pokemon Emerald.gba">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Zelda: The Minish Cap</h3>
+          <article class="software" role="article" aria-labelledby="title-zelda" data-key="zelda">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-zelda">Zelda: The Minish Cap</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Zelda: The Minish Cap" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn to reverse engineer software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Zelda.gba" data-core="mgba" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/zelda.html">Details</a>
+              <a class="btn ghost" href="roms/Zelda.gba">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>NBA Jam</h3>
+          <article class="software" role="article" aria-labelledby="title-nba-jam" data-key="nba-jam">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-nba-jam">NBA Jam</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite NBA Jam" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn how to make multiuser software</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/NBA Jam.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/nba.html">Details</a>
+              <a class="btn ghost" href="roms/NBA Jam.sfc">Downloads</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Tetris DX</h3>
+          <article class="software" role="article" aria-labelledby="title-tetris" data-key="tetris-dx">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-tetris">Tetris DX</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Tetris DX" title="Favorite">☆</button>
+            </div>
             <div class="meta">Build a puzzle app inspired by tetris</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Tetris.gbc" data-core="gambatte" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/tetris.html">Details</a>
+              <a class="btn ghost" href="roms/Tetris.gbc">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Top Gear</h3>
+          <article class="software" role="article" aria-labelledby="title-top-gear" data-key="top-gear">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-top-gear">Top Gear</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Top Gear" title="Favorite">☆</button>
+            </div>
             <div class="meta">Programming with variables</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Top Gear.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/topgear.html">Details</a>
+              <a class="btn ghost" href="roms/Top Gear.sfc">Downloads</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Yoshi's Island</h3>
+          <article class="software" role="article" aria-labelledby="title-yoshis-island" data-key="yoshis-island">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-yoshis-island">Yoshi's Island</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Yoshi's Island" title="Favorite">☆</button>
+            </div>
             <div class="meta">Momentum control algorithms</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Yoshi Island.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/yoshi.html">Details</a>
+              <a class="btn ghost" href="roms/Yoshi Island.sfc">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Donkey Kong Country</h3>
+          <article class="software" role="article" aria-labelledby="title-dkc" data-key="donkey-kong-country">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-dkc">Donkey Kong Country</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Donkey Kong Country" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn: Button Triggering</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Donkey Kong Country.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/donkey.html">Details</a>
+              <a class="btn ghost" href="roms/Donkey Kong Country.sfc">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Sonic The Hedgehog</h3>
+          <article class="software" role="article" aria-labelledby="title-sonic" data-key="sonic-the-hedgehog">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-sonic">Sonic The Hedgehog</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Sonic The Hedgehog" title="Favorite">☆</button>
+            </div>
             <div class="meta">Fix the bugs in the program</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/sonic.md" data-core="sega-md" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/sonic.html">Details</a>
+              <a class="btn ghost" href="roms/sonic.md">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Mario Tennis</h3>
+          <article class="software" role="article" aria-labelledby="title-mario-tennis" data-key="mario-tennis">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-mario-tennis">Mario Tennis</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Mario Tennis" title="Favorite">☆</button>
+            </div>
             <div class="meta">Educational tennis how-to</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Mario Tennis.gbc" data-core="mgba" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/mariotennis.html">Details</a>
+              <a class="btn ghost" href="roms/Mario Tennis.gbc">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Sim City</h3>
+          <article class="software" role="article" aria-labelledby="title-sim-city" data-key="sim-city">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-sim-city">Sim City</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Sim City" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn how simulations work</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/simcity.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/simcity.html">Details</a>
+              <a class="btn ghost" href="roms/simcity.sfc">Details</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>Super Mario World</h3>
+          <article class="software" role="article" aria-labelledby="title-super-mario-world" data-key="super-mario-world">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-super-mario-world">Super Mario World</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Super Mario World" title="Favorite">☆</button>
+            </div>
             <div class="meta">Build a 2D platform app</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/Super Mario World.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/supermario.html">Details</a>
+              <a class="btn ghost" href="roms/Super Mario World.sfc">Download</a>
             </div>
           </article>
 
-          <article class="software">
-            <h3>MVP Baseball</h3>
+          <article class="software" role="article" aria-labelledby="title-mvp-baseball" data-key="mvp-baseball">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-mvp-baseball">MVP Baseball</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite MVP Baseball" title="Favorite">☆</button>
+            </div>
             <div class="meta">Learn to turn apps into websites</div>
             <div style="display:flex;gap:8px;margin-top:8px">
               <button class="btn play" data-rom="roms/MVP Baseball.sfc" data-core="snes9x" type="button">Start</button>
-              <a class="btn ghost" href="pages/details/mvp.html">Details</a>
+              <a class="btn ghost" href="roms/MVP Baseball.sfc">Downloads</a>
             </div>
           </article>
         </div>
@@ -391,12 +509,13 @@
       <!-- RIGHT column -->
       <div class="right">
         <div id="display" class="placeholder" role="region" aria-live="polite" aria-label="Software display area">
-          Click Play to load a software into the embedded system. Uploads are disabled on this page.
+          <div id="displayMessage">Click Play to load a software into the embedded system. Uploads are disabled on this page.</div>
         </div>
 
         <div class="controls-row">
           <button id="closeBtn" class="btn ghost" title="Close currently running software">Close software</button>
           <button id="returnBtn" class="btn ghost" title="Return to launcher">Return to launcher</button>
+          <button id="fullscreenBtn" class="btn ghost" aria-pressed="false" aria-label="Toggle fullscreen" title="Toggle fullscreen">⤢</button>
           <div style="margin-left:auto" class="small">Controls: <span style="font-family:var(--mono)">Z</span> = A, <span style="font-family:var(--mono)">X</span> = B, Arrows = DPad, Enter = Start</div>
         </div>
 
@@ -410,7 +529,7 @@
       </div>
     </main>
 
-    <footer>Find the source code <a href"https://github.com/sdjclassroom/sdjclassroom.github.io">here</a></footer>
+  <footer>Find the source code <a href="https://github.com/sdjclassroom/sdjclassroom.github.io" target="_blank" rel="noopener noreferrer">on GitHub</a></footer>
   </div>
 
   <script>
@@ -492,6 +611,13 @@
           delete window.EJS_threads;
         } catch (e) { /* ignore */ }
       }
+      // ensure the emulator display uses the GBA aspect ratio for embedded emulator
+      function setDisplayToGBA() {
+        const d = document.getElementById('display');
+        if (d) d.style.aspectRatio = '3 / 2';
+      }
+      // call once on load to enforce GBA ratio
+      setDisplayToGBA();
 
       function loadEmulator({ rom, core, name }) {
         if (!rom) return;
@@ -549,6 +675,14 @@
             }
             ev.preventDefault();
             loadEmulator({ rom, core, name });
+            // On small screens, automatically request fullscreen for the display to improve UX
+            if (window.innerWidth <= 899) {
+              try {
+                const el = document.getElementById('display');
+                if (el && el.requestFullscreen) el.requestFullscreen();
+                else if (el && el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+              } catch (e) { /* ignore */ }
+            }
           });
         });
       }
@@ -570,6 +704,40 @@
           if (left) left.focus();
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      // Fullscreen button
+      const fsBtn = document.getElementById('fullscreenBtn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', async () => {
+          const d = document.getElementById('display');
+          if (!d) return;
+          if (document.fullscreenElement) {
+            await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
+            fsBtn.setAttribute('aria-pressed', 'false');
+          } else {
+            try {
+              if (d.requestFullscreen) await d.requestFullscreen();
+              else if (d.webkitRequestFullscreen) await d.webkitRequestFullscreen();
+              fsBtn.setAttribute('aria-pressed', 'true');
+            } catch (e) { /* ignore */ }
+          }
+        });
+      }
+
+      // Listen for fullscreen change to update button state
+      document.addEventListener('fullscreenchange', () => {
+        const inFs = !!document.fullscreenElement;
+        const b = document.getElementById('fullscreenBtn');
+        if (b) b.setAttribute('aria-pressed', inFs ? 'true' : 'false');
+      });
+
+      // Keyboard shortcut: F toggles fullscreen when focused in the page
+      window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'f' && !e.metaKey && !e.ctrlKey) {
+          const b = document.getElementById('fullscreenBtn');
+          if (b) b.click();
         }
       });
 
@@ -621,6 +789,90 @@
 
       // Expose for debugging if needed
       window._sdj_filter = filterSoftwares;
+      // --- Favorites (cookie-based, no accounts) ---
+      function cookieGet(name) {
+        const v = document.cookie.match('(?:^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return v ? decodeURIComponent(v[1]) : null;
+      }
+
+      function cookieSet(name, value, days) {
+        const expires = new Date(Date.now() + (days || 365) * 864e5).toUTCString();
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
+      }
+
+      function getFavorites() {
+        try {
+          const raw = cookieGet('sdj_favorites');
+          if (!raw) return [];
+          return JSON.parse(raw);
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function setFavorites(list) {
+        cookieSet('sdj_favorites', JSON.stringify(list || []), 365);
+      }
+
+      function updateFavUI() {
+        const favs = new Set(getFavorites());
+        document.querySelectorAll('.fav-btn').forEach(btn => {
+          const article = btn.closest('.software');
+          const key = article && article.getAttribute('data-key');
+          const isFav = key && favs.has(key);
+          btn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
+          btn.textContent = isFav ? '★' : '☆';
+        });
+      }
+
+      function reorderListByFavorites() {
+        const container = document.getElementById('softwareList');
+        if (!container) return;
+        const favs = new Set(getFavorites());
+        const nodes = Array.from(container.querySelectorAll('.software'));
+        // keep original relative order among favorites and non-favorites
+        // ensure original indexes are present
+        nodes.forEach((n, i) => {
+          if (!n.hasAttribute('data-original-index')) n.setAttribute('data-original-index', i);
+        });
+        nodes.sort((a, b) => {
+          const ak = a.getAttribute('data-key');
+          const bk = b.getAttribute('data-key');
+          const af = favs.has(ak) ? 0 : 1;
+          const bf = favs.has(bk) ? 0 : 1;
+          if (af !== bf) return af - bf;
+          const ai = parseInt(a.getAttribute('data-original-index') || '0', 10);
+          const bi = parseInt(b.getAttribute('data-original-index') || '0', 10);
+          return ai - bi;
+        });
+        // re-append in order
+        nodes.forEach(n => container.appendChild(n));
+      }
+
+      // toggle favorite handler
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest && e.target.closest('.fav-btn');
+        if (!btn) return;
+        const article = btn.closest('.software');
+        if (!article) return;
+        const key = article.getAttribute('data-key');
+        if (!key) return;
+        const favs = new Set(getFavorites());
+        if (favs.has(key)) {
+          favs.delete(key);
+        } else {
+          favs.add(key);
+        }
+        setFavorites(Array.from(favs));
+        updateFavUI();
+        reorderListByFavorites();
+      });
+
+      // initialize favorites UI on load
+      (function initFavs() {
+        updateFavUI();
+        reorderListByFavorites();
+      })();
     })();
   </script>
 </body>
