@@ -425,7 +425,7 @@
             </div>
             <div class="meta">A great way to learn the basics of 3D modeling.</div>
             <div class="card-actions">
-              <a class="btn play" href="pages/aboutus.html" role="button">Start</a>
+              <button class="btn play" data-minecraft="true" type="button">Start</button>
               <a class="btn ghost" href="pages/aboutus.html">Download</a>
             </div>
           </article>
@@ -437,8 +437,8 @@
             </div>
             <div class="meta">Learn to build fast paced 3D software</div>
             <div class="card-actions">
-              <a class="btn play" href="pages/support.html" role="button">Start</a>
-              <a class="btn ghost" href="pages/details/slope.html">Details</a>
+              <button class="btn play" data-slope="true" type="button">Start</button>
+              <a class="btn ghost" href="pages/details/slope.html">Download</a>
             </div>
           </article>
 
@@ -600,9 +600,10 @@
         <div class="controls-row">
           <button id="closeBtn" class="btn ghost" title="Close currently running software">Close software</button>
           <button id="returnBtn" class="btn ghost" title="Return to launcher">Return to launcher</button>
-          <button id="fullscreenBtn" class="btn ghost" aria-pressed="false" aria-label="Toggle fullscreen" title="Toggle fullscreen">⤢</button>
+          <button id="fullscreenBtn" class="btn ghost" aria-pressed="false" aria-label="Toggle fullscreen" title="Toggle fullscreen">Fullscreen</button>
           <div style="margin-left:auto" class="small">Controls: <span style="font-family:var(--mono)">Z</span> = A, <span style="font-family:var(--mono)">X</span> = B, Arrows = DPad, Enter = Start</div>
         </div>
+        <button id="unfullscreenBtn" class="btn ghost" style="display:none;position:fixed;top:18px;right:18px;z-index:99999;font-size:16px;padding:12px 18px;" title="Exit fullscreen">Unfullscreen</button>
 
         <!-- Ad removed: emulator now occupies the full right column -->
       </div>
@@ -759,23 +760,31 @@
       // Attach listeners to play buttons (works for dynamic elements too)
       function attachPlayButtons() {
         document.querySelectorAll('button.play, a.btn.play').forEach(btn => {
-          // Avoid double-binding
           if (btn.dataset._playBound) return;
           btn.dataset._playBound = '1';
 
           btn.addEventListener('click', (ev) => {
-            // anchor vs button: prefer data-rom, fallback to href or data-core
+            // Minecraft embed
+            if (btn.hasAttribute('data-minecraft')) {
+              ev.preventDefault();
+              loadMinecraft();
+              return;
+            }
+            // Slope embed
+            if (btn.hasAttribute('data-slope')) {
+              ev.preventDefault();
+              loadSlope();
+              return;
+            }
+            // EmulatorJS
             const rom = btn.getAttribute('data-rom') || btn.getAttribute('href') || null;
             const core = btn.getAttribute('data-core') || null;
             const name = btn.closest('.software')?.querySelector('h3')?.textContent?.trim() || rom;
-            // anchors with href that link to pages should still navigate — only intercept if data-rom present
             if (btn.tagName.toLowerCase() === 'a' && !btn.hasAttribute('data-rom')) {
-              // normal link: allow
               return;
             }
             ev.preventDefault();
             loadEmulator({ rom, core, name });
-            // On small screens, automatically request fullscreen for the display to improve UX
             if (window.innerWidth <= 899) {
               try {
                 const el = document.getElementById('display');
@@ -787,6 +796,74 @@
         });
       }
       attachPlayButtons();
+
+      // Minecraft loader
+      function loadMinecraft() {
+        const display = document.getElementById('display');
+        display.classList.remove('placeholder');
+        clearPreviousLoader();
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
+        // Show loading message
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading Minecraft...';
+        inner.appendChild(loading);
+        // Embed local aboutus.html for Minecraft
+        const iframe = document.createElement('iframe');
+        iframe.src = 'pages/aboutus.html';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+          loading.remove();
+          iframe.style.display = 'block';
+        };
+        inner.appendChild(iframe);
+      }
+
+      // Slope loader
+      function loadSlope() {
+        const display = document.getElementById('display');
+        display.classList.remove('placeholder');
+        clearPreviousLoader();
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
+        // Show loading message
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading Slope...';
+        inner.appendChild(loading);
+        // Embed local support.html for Slope
+        const iframe = document.createElement('iframe');
+        iframe.src = 'pages/support.html';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+          loading.remove();
+          iframe.style.display = 'block';
+        };
+        inner.appendChild(iframe);
+      }
 
       // Close / Return buttons
       document.getElementById('closeBtn').addEventListener('click', () => {
@@ -829,8 +906,10 @@
         }
       });
 
+
       // Fullscreen button
       const fsBtn = document.getElementById('fullscreenBtn');
+      const unfsBtn = document.getElementById('unfullscreenBtn');
       if (fsBtn) {
         fsBtn.addEventListener('click', async () => {
           const d = document.getElementById('display');
@@ -848,11 +927,22 @@
         });
       }
 
-      // Listen for fullscreen change to update button state
+      // Unfullscreen button
+      if (unfsBtn) {
+        unfsBtn.addEventListener('click', async () => {
+          if (document.fullscreenElement) {
+            await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
+          }
+        });
+      }
+
+      // Listen for fullscreen change to update button state and show/hide unfullscreen button
       document.addEventListener('fullscreenchange', () => {
         const inFs = !!document.fullscreenElement;
         const b = document.getElementById('fullscreenBtn');
+        const unfs = document.getElementById('unfullscreenBtn');
         if (b) b.setAttribute('aria-pressed', inFs ? 'true' : 'false');
+        if (unfs) unfs.style.display = inFs ? 'block' : 'none';
       });
 
       // Keyboard shortcut: F toggles fullscreen when focused in the page
