@@ -442,6 +442,18 @@
             </div>
           </article>
 
+          <article class="software" role="article" aria-labelledby="title-dino" data-key="dinosuar">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-dino">Dinosuar</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Dinosuar" title="Favorite">☆</button>
+            </div>
+            <div class="meta">Educational: learning programming concepts through interactive demos</div>
+            <div class="card-actions">
+              <button class="btn play" data-dino="true" type="button">Start</button>
+              <a class="btn ghost" href="pages/dino.html">Download</a>
+            </div>
+          </article>
+
           <article class="software" role="article" aria-labelledby="title-pokemon-emerald" data-key="pokemon-emerald">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
               <h3 id="title-pokemon-emerald">Pokemon Emerald</h3>
@@ -583,6 +595,20 @@
             <div class="card-actions">
               <button class="btn play" data-rom="roms/MVP Baseball.sfc" data-core="snes9x" type="button">Start</button>
               <a class="btn ghost" href="roms/MVP Baseball.sfc">Downloads</a>
+            </div>
+          </article>
+
+          <!-- Educational Snake game (inline) -->
+          <article class="software" role="article" aria-labelledby="title-snake" data-key="snake">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-snake">Snake</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Snake" title="Favorite">☆</button>
+            </div>
+            <div class="meta">A simple educational Snake game demonstrating game loops, arrays and collision detection.</div>
+            <div class="card-actions">
+              <!-- data-game triggers inline loader instead of emulator loader -->
+              <button class="btn play" data-game="snake" type="button">Start</button>
+              <button class="btn ghost" data-game-doc="snake" type="button">Download</button>
             </div>
           </article>
         </div>
@@ -757,6 +783,28 @@
         if (window.innerWidth < 640) softwareDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
+      // Snake loader: embed the existing pages/snake.html in an iframe inside #display
+      function loadSnake() {
+        clearPreviousLoader();
+        display.classList.remove('placeholder');
+        display.innerHTML = '';
+        const inner = document.createElement('div');
+        inner.className = 'emulator-inner';
+        inner.style.alignItems = 'center';
+        inner.style.padding = '8px';
+
+        const iframe = document.createElement('iframe');
+        iframe.src = 'pages/snake.html';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.setAttribute('title', 'Snake educational demo');
+
+        inner.appendChild(iframe);
+        display.appendChild(inner);
+      }
+
       // Attach listeners to play buttons (works for dynamic elements too)
       function attachPlayButtons() {
         document.querySelectorAll('button.play, a.btn.play').forEach(btn => {
@@ -775,6 +823,18 @@
               ev.preventDefault();
               loadSlope();
               return;
+            }
+            // Dinosuar embed
+            if (btn.hasAttribute('data-dino')) {
+              ev.preventDefault();
+              loadDino();
+              return;
+            }
+            // Inline small demos (data-game)
+            if (btn.hasAttribute('data-game')) {
+              ev.preventDefault();
+              const g = btn.getAttribute('data-game');
+              if (g === 'snake') { loadSnake(); return; }
             }
             // EmulatorJS
             const rom = btn.getAttribute('data-rom') || btn.getAttribute('href') || null;
@@ -853,6 +913,40 @@
         // Embed local support.html for Slope
         const iframe = document.createElement('iframe');
         iframe.src = 'pages/support.html';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+          loading.remove();
+          iframe.style.display = 'block';
+        };
+        inner.appendChild(iframe);
+      }
+
+      // Dinosuar loader (embed pages/dino.html the same way as Slope)
+      function loadDino() {
+        const display = document.getElementById('display');
+        display.classList.remove('placeholder');
+        clearPreviousLoader();
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
+        // Show loading message
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading Dinosuar...';
+        inner.appendChild(loading);
+        // Embed local dino.html
+        const iframe = document.createElement('iframe');
+        iframe.src = 'pages/dino.html';
         iframe.width = '100%';
         iframe.height = '100%';
         iframe.style.border = '0';
