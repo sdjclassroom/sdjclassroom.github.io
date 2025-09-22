@@ -290,6 +290,7 @@
       min-height: 0;
       /* ensure internal touches/scroll stay inside the card */
       touch-action: none;
+      position: relative; /* allow scoped absolute overlay inside the display */
     }
 
     /* Inner fixed-aspect container - this is the area the emulator will render into */
@@ -384,6 +385,55 @@
       display: flex; align-items: center; justify-content: center;
       background: #000;
     }
+    /* Page-only fullscreen mode: expand the emulator to fill the page without using
+       the browser's fullscreen API. Toggled by adding `page-full` to the body. */
+    body.page-full { overflow: hidden; }
+    body.page-full .left { display: none !important; }
+    body.page-full .right { padding: 0; height: 100vh; overflow: hidden; }
+    body.page-full #display {
+      position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 99998;
+      border-radius: 0 !important; aspect-ratio: auto !important; background: #000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    body.page-full .controls-row {
+      position: fixed; top: 8px; left: 8px; right: 8px; z-index: 99999; display: flex; gap:8px;
+      background: rgba(0,0,0,0.28); padding:8px; border-radius: 8px;
+    }
+    /* Minimal overlays: hide most controls (close/return/etc.) in fullscreen-like modes
+       Keep only the unfullscreen/exit control visible so users can return. */
+    body.page-full .controls-row #closeBtn,
+    body.page-full .controls-row #returnBtn,
+    body.page-full .controls-row .small { display: none !important; }
+    :fullscreen .controls-row #closeBtn,
+    :fullscreen .controls-row #returnBtn,
+    :-webkit-full-screen .controls-row #closeBtn,
+    :-webkit-full-screen .controls-row #returnBtn { display: none !important; }
+    /* Ensure the unfullscreen button remains visible and prominent */
+    body.page-full #unfullscreenBtn,
+    :fullscreen #unfullscreenBtn,
+    :-webkit-full-screen #unfullscreenBtn { display: block !important; }
+    /* --- Global loading overlay / animation --- */
+    .sdj-loader-overlay {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.45); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .18s ease;
+      border-radius: inherit; /* match display rounding */
+    }
+    .sdj-loader-overlay.show { opacity: 1; pointer-events: auto; }
+  .sdj-loader-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding: 14px 18px; border-radius: 12px; display:flex; gap:12px; align-items:center; border:1px solid rgba(255,255,255,0.04); box-shadow: 0 8px 30px rgba(0,0,0,0.6); }
+  /* loader hero: multi-ring orbit animation */
+  .sdj-loader-hero { width: 72px; height: 72px; position: relative; display:flex; align-items:center; justify-content:center; }
+  .sdj-loader-hero .ring { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .sdj-loader-hero .ring span { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 6px 20px rgba(31,191,118,0.22); transform: translateX(28px); }
+  .sdj-loader-hero .ring.r2 span { width:10px; height:10px; transform: translateX(22px); background: linear-gradient(180deg,var(--accent-2),var(--accent)); box-shadow: 0 6px 18px rgba(15,165,100,0.18); }
+  .sdj-loader-hero .ring.r3 span { width:8px; height:8px; transform: translateX(16px); background: rgba(255,255,255,0.06); box-shadow: 0 4px 14px rgba(255,255,255,0.04); }
+  .sdj-loader-hero .ring.r1 { animation: sdj-rotate 1.6s linear infinite; }
+  .sdj-loader-hero .ring.r2 { animation: sdj-rotate-rev 1.2s linear infinite; }
+  .sdj-loader-hero .ring.r3 { animation: sdj-rotate 2.2s linear infinite; }
+  .sdj-loader-hero .ring span { animation: sdj-pulse 1.2s ease-in-out infinite; }
+  .sdj-loader-msg { color: #e9f7ef; font-family: var(--mono); font-weight:700; font-size:13px; }
+  @keyframes sdj-rotate { to { transform: rotate(1turn); } }
+  @keyframes sdj-rotate-rev { to { transform: rotate(-1turn); } }
+  @keyframes sdj-pulse { 0%,100% { transform: translateX(var(--tx,28px)) scale(0.9); opacity:0.9 } 50% { transform: translateX(var(--tx,28px)) scale(1.25); opacity:1 } }
 
     /* Keep controls visible when in fullscreen - place them at top */
     :fullscreen .controls-row,
@@ -637,6 +687,7 @@
 
   <!-- footer intentionally removed -->
   </div>
+  
 
   <script>
     (function () {
@@ -725,9 +776,26 @@
       // call once on load to enforce GBA ratio
       setDisplayToGBA();
 
+      // ensure loader element exists inside #display (scoped overlay)
+      (function ensureScopedLoader(){
+        const d = document.getElementById('display');
+        if (!d) return;
+        let l = d.querySelector('#sdjLoader');
+        if (!l) {
+          l = document.createElement('div');
+          l.id = 'sdjLoader';
+          l.className = 'sdj-loader-overlay';
+          l.setAttribute('aria-hidden', 'true');
+          l.innerHTML = '\n+            <div class="sdj-loader-card" role="status" aria-live="polite">\n+              <div class="sdj-loader-hero">\n+                <div class="ring r1"><span style="--tx:28px"></span></div>\n+                <div class="ring r2"><span style="--tx:22px"></span></div>\n+                <div class="ring r3"><span style="--tx:16px"></span></div>\n+              </div>\n+              <div class="sdj-loader-msg">Loading content…</div>\n+            </div>\n+          ';
+          // insert at top of display so it overlays iframe/content
+          d.insertBefore(l, d.firstChild);
+        }
+      })();
+
       function loadEmulator({ rom, core, name }) {
         if (!rom) return;
         // ensure outer display is prepared
+        showLoader('Loading emulator...');
         display.classList.remove('placeholder');
         clearPreviousLoader();
 
@@ -773,18 +841,44 @@
         s.src = 'data/loader.js';
         s.async = true;
         s.setAttribute('data-ejs-loader', 'true');
-        s.onload = () => console.log('EmulatorJS loader appended for', rom);
+        s.onload = () => {
+          console.log('EmulatorJS loader appended for', rom);
+          // loader script loaded; hide the UI loader
+          hideLoader();
+        };
         s.onerror = (err) => {
           console.error('Failed to load data/loader.js', err);
           display.innerHTML = '<div style="color:var(--muted);font-family:var(--mono)">Failed to load emulator loader.js</div>';
+          hideLoader();
         };
         document.body.appendChild(s);
 
         if (window.innerWidth < 640) softwareDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
+      // show/hide loader helpers
+      function showLoader(msg) {
+        try {
+          const l = document.getElementById('sdjLoader');
+          if (!l) return;
+          const m = l.querySelector('.sdj-loader-msg');
+          if (m && msg) m.textContent = msg;
+          l.classList.add('show');
+          l.setAttribute('aria-hidden', 'false');
+        } catch (e) { /* ignore */ }
+      }
+      function hideLoader() {
+        try {
+          const l = document.getElementById('sdjLoader');
+          if (!l) return;
+          l.classList.remove('show');
+          l.setAttribute('aria-hidden', 'true');
+        } catch (e) { /* ignore */ }
+      }
+
       // Snake loader: embed the existing pages/snake.html in an iframe inside #display
       function loadSnake() {
+        showLoader('Loading Snake...');
         clearPreviousLoader();
         display.classList.remove('placeholder');
         display.innerHTML = '';
@@ -793,15 +887,18 @@
         inner.style.alignItems = 'center';
         inner.style.padding = '8px';
 
-        const iframe = document.createElement('iframe');
-        iframe.src = 'pages/snake.html';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = '0';
-        iframe.allow = 'fullscreen';
-        iframe.setAttribute('title', 'Snake educational demo');
+  const iframe = document.createElement('iframe');
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = '0';
+  iframe.allow = 'fullscreen';
+  iframe.setAttribute('title', 'Snake educational demo');
+  // attach handlers before setting src so cached loads still fire our handlers
+  iframe.onload = function() { hideLoader(); };
+  iframe.onerror = function() { hideLoader(); };
+  iframe.src = 'pages/snake.html';
 
-        inner.appendChild(iframe);
+  inner.appendChild(iframe);
         display.appendChild(inner);
       }
 
@@ -860,6 +957,7 @@
       // Minecraft loader
       function loadMinecraft() {
         const display = document.getElementById('display');
+        showLoader('Loading Minecraft...');
         display.classList.remove('placeholder');
         clearPreviousLoader();
         let inner = display.querySelector('.emulator-inner');
@@ -878,22 +976,26 @@
         inner.appendChild(loading);
         // Embed local aboutus.html for Minecraft
         const iframe = document.createElement('iframe');
-        iframe.src = 'pages/aboutus.html';
         iframe.width = '100%';
         iframe.height = '100%';
         iframe.style.border = '0';
         iframe.allow = 'fullscreen';
         iframe.style.display = 'none';
+        // attach handlers first
         iframe.onload = function() {
           loading.remove();
           iframe.style.display = 'block';
+          hideLoader();
         };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = 'pages/aboutus.html';
         inner.appendChild(iframe);
       }
 
       // Slope loader
       function loadSlope() {
         const display = document.getElementById('display');
+        showLoader('Loading Slope...');
         display.classList.remove('placeholder');
         clearPreviousLoader();
         let inner = display.querySelector('.emulator-inner');
@@ -912,22 +1014,26 @@
         inner.appendChild(loading);
         // Embed local support.html for Slope
         const iframe = document.createElement('iframe');
-        iframe.src = 'pages/support.html';
         iframe.width = '100%';
         iframe.height = '100%';
         iframe.style.border = '0';
         iframe.allow = 'fullscreen';
         iframe.style.display = 'none';
+        // attach handlers first so cached loads trigger them
         iframe.onload = function() {
           loading.remove();
           iframe.style.display = 'block';
+          hideLoader();
         };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = 'pages/support.html';
         inner.appendChild(iframe);
       }
 
       // Dinosuar loader (embed pages/dino.html the same way as Slope)
       function loadDino() {
         const display = document.getElementById('display');
+        showLoader('Loading Dinosuar...');
         display.classList.remove('placeholder');
         clearPreviousLoader();
         let inner = display.querySelector('.emulator-inner');
@@ -946,16 +1052,19 @@
         inner.appendChild(loading);
         // Embed local dino.html
         const iframe = document.createElement('iframe');
-        iframe.src = 'pages/dino.html';
         iframe.width = '100%';
         iframe.height = '100%';
         iframe.style.border = '0';
         iframe.allow = 'fullscreen';
         iframe.style.display = 'none';
+        // ensure handlers are attached before src assignment
         iframe.onload = function() {
           loading.remove();
           iframe.style.display = 'block';
+          hideLoader();
         };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = 'pages/dino.html';
         inner.appendChild(iframe);
       }
 
@@ -1005,39 +1114,70 @@
       const fsBtn = document.getElementById('fullscreenBtn');
       const unfsBtn = document.getElementById('unfullscreenBtn');
       if (fsBtn) {
-        fsBtn.addEventListener('click', async () => {
+        // Toggle a page-only fullscreen mode: add/remove `page-full` on <body>
+        fsBtn.addEventListener('click', () => {
           const d = document.getElementById('display');
           if (!d) return;
-          if (document.fullscreenElement) {
-            await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
-            fsBtn.setAttribute('aria-pressed', 'false');
-          } else {
-            try {
-              if (d.requestFullscreen) await d.requestFullscreen();
-              else if (d.webkitRequestFullscreen) await d.webkitRequestFullscreen();
-              fsBtn.setAttribute('aria-pressed', 'true');
-            } catch (e) { /* ignore */ }
-          }
+          const isPageFull = document.body.classList.toggle('page-full');
+          fsBtn.setAttribute('aria-pressed', isPageFull ? 'true' : 'false');
+          // show the unfullscreen button when in page-full mode
+          if (unfsBtn) unfsBtn.style.display = isPageFull ? 'block' : 'none';
+          // set aria-hidden on overlays for assistive tech
+          const closeBtn = document.getElementById('closeBtn');
+          const returnBtn = document.getElementById('returnBtn');
+          const smallInfo = document.querySelector('.controls-row .small');
+          const leftCol = document.querySelector('.left');
+          if (closeBtn) closeBtn.setAttribute('aria-hidden', isPageFull ? 'true' : 'false');
+          if (returnBtn) returnBtn.setAttribute('aria-hidden', isPageFull ? 'true' : 'false');
+          if (smallInfo) smallInfo.setAttribute('aria-hidden', isPageFull ? 'true' : 'false');
+          if (leftCol) leftCol.setAttribute('aria-hidden', isPageFull ? 'true' : 'false');
         });
       }
 
       // Unfullscreen button
       if (unfsBtn) {
-        unfsBtn.addEventListener('click', async () => {
+        unfsBtn.addEventListener('click', () => {
+          // If browser fullscreen is active, exit it; also remove page-full state.
           if (document.fullscreenElement) {
-            await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
+            (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen()).catch(() => {});
           }
+          document.body.classList.remove('page-full');
+          if (fsBtn) fsBtn.setAttribute('aria-pressed', 'false');
+          unfsBtn.style.display = 'none';
+          // clear aria-hidden flags
+          const closeBtn = document.getElementById('closeBtn');
+          const returnBtn = document.getElementById('returnBtn');
+          const smallInfo = document.querySelector('.controls-row .small');
+          const leftCol = document.querySelector('.left');
+          if (closeBtn) closeBtn.setAttribute('aria-hidden', 'false');
+          if (returnBtn) returnBtn.setAttribute('aria-hidden', 'false');
+          if (smallInfo) smallInfo.setAttribute('aria-hidden', 'false');
+          if (leftCol) leftCol.setAttribute('aria-hidden', 'false');
         });
       }
 
       // Listen for fullscreen change to update button state and show/hide unfullscreen button
-      document.addEventListener('fullscreenchange', () => {
-        const inFs = !!document.fullscreenElement;
+      // Keep UI buttons in sync for either browser fullscreen or our page-full mode
+      function updateFsButtons() {
+        const inFs = !!document.fullscreenElement || document.body.classList.contains('page-full');
         const b = document.getElementById('fullscreenBtn');
         const unfs = document.getElementById('unfullscreenBtn');
         if (b) b.setAttribute('aria-pressed', inFs ? 'true' : 'false');
         if (unfs) unfs.style.display = inFs ? 'block' : 'none';
-      });
+        // Sync aria-hidden for overlays when entering/exiting any fullscreen-like mode
+        const closeBtn = document.getElementById('closeBtn');
+        const returnBtn = document.getElementById('returnBtn');
+        const smallInfo = document.querySelector('.controls-row .small');
+        const leftCol = document.querySelector('.left');
+        if (closeBtn) closeBtn.setAttribute('aria-hidden', inFs ? 'true' : 'false');
+        if (returnBtn) returnBtn.setAttribute('aria-hidden', inFs ? 'true' : 'false');
+        if (smallInfo) smallInfo.setAttribute('aria-hidden', inFs ? 'true' : 'false');
+        if (leftCol) leftCol.setAttribute('aria-hidden', inFs ? 'true' : 'false');
+      }
+      document.addEventListener('fullscreenchange', updateFsButtons);
+      // also update when page-full toggled via JS (we already set display there) but observe class changes for safety
+      const bodyObserver = new MutationObserver(updateFsButtons);
+      bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
       // Keyboard shortcut: F toggles fullscreen when focused in the page
       window.addEventListener('keydown', (e) => {
