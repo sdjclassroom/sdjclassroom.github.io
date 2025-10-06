@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Donate — SDJ Classroom</title>
+  <link rel="icon" href="/assets/favicon.png">
+  <style>
+    :root{ --bg:#021217; --card:#07121a; --muted:#98b8c6; --accent:#1fbf76; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;color:#e9f7ef}
+    body{background-image: url('/assets/background.png');background-size:cover;background-position:center center;background-attachment:fixed;}
+    .wrap{max-width:900px;margin:28px auto;padding:20px}
+    .card{background:rgba(2,6,10,0.64);backdrop-filter:blur(6px);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+    h1{margin:0 0 6px 0;font-size:22px}
+    p.sub{color:var(--muted);margin:0 0 16px 0}
+    .donation-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .btc-box{background:linear-gradient(180deg,#07292e,#0f4d5a);padding:14px;border-radius:10px;min-width:260px;display:flex;flex-direction:column;gap:8px}
+    .addr{font-family:var(--mono);word-break:break-all;background:rgba(0,0,0,0.12);padding:8px;border-radius:8px;font-weight:700}
+    .btn{appearance:none;border:0;padding:10px 12px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#0fa564);color:#022b1d;font-weight:800;cursor:pointer;font-family:var(--mono)}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .qr{width:160px;height:160px;background:#fff;padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .note{color:var(--muted);font-size:13px;margin-top:12px}
+    @media (max-width:640px){.donation-row{flex-direction:column}.qr{width:140px;height:140px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <h1 style="margin:0">Support SDJ Classroom</h1>
+          <p class="sub">Your support helps keep the site running. If you'd like to help, here's a quick way to donate in Bitcoin.</p>
+        </div>
+        <div style="min-width:120px;text-align:right">
+          <a href="/" class="btn ghost" style="padding:8px 12px;">Back to home</a>
+        </div>
+      </div>
+
+      <div class="donation-row">
+        <div class="btc-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div style="font-weight:800">Bitcoin (BTC)</div>
+            <button id="copyBtn" class="btn" aria-label="Copy Bitcoin address">Copy</button>
+          </div>
+          <div id="btcAddress" class="addr">Not availible</div>
+          <div class="note">Tip: click Copy to copy the address to your clipboard.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+          <div class="qr" id="qrContainer" aria-hidden="true">
+            <!-- Optional QR: rendered via external chart API for convenience -->
+            <img id="qrImg" src="" alt="Bitcoin QR code" style="width:100%;height:100%;object-fit:contain;border-radius:6px" />
+          </div>
+          <a class="btn ghost" id="manualBtn" href="#" onclick="document.getElementById('btcAddress').scrollIntoView();return false">Show address</a>
+        </div>
+      </div>
+
+      <p class="note">If you'd prefer another payment method or have questions about supporting the site, <a href="/pages/support.html" style="color:var(--accent)">contact us</a>.</p>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const addrEl = document.getElementById('btcAddress');
+      const copyBtn = document.getElementById('copyBtn');
+      const qrImg = document.getElementById('qrImg');
+      const address = addrEl.textContent.trim();
+
+      // set QR (bitcoin: URI). Replace or remove if you don't want external api usage.
+      try{
+        const encoded = encodeURIComponent('bitcoin:' + address);
+        qrImg.src = 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=' + encoded + '&choe=UTF-8';
+      }catch(e){/* ignore */}
+
+      copyBtn.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(address);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(()=>copyBtn.textContent='Copy',1500);
+        }catch(e){
+          alert('Copy failed — please select and copy the address manually.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
