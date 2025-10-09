@@ -42,14 +42,14 @@
             <div style="font-weight:800">Bitcoin (BTC)</div>
             <button id="copyBtn" class="btn" aria-label="Copy Bitcoin address">Copy</button>
           </div>
-          <div id="btcAddress" class="addr">Not availible</div>
+          <div id="btcAddress" class="addr">bc1q5zahdsl823avqws8w283sh3d4usl97v3ru4tcj</div>
           <div class="note">Tip: click Copy to copy the address to your clipboard.</div>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
           <div class="qr" id="qrContainer" aria-hidden="true">
             <!-- Optional QR: rendered via external chart API for convenience -->
-            <img id="qrImg" src="" alt="Bitcoin QR code" style="width:100%;height:100%;object-fit:contain;border-radius:6px" />
+            <img id="qrImg" src="assets/Bitcoin.png" alt="Bitcoin QR code" style="width:100%;height:100%;object-fit:contain;border-radius:6px" />
           </div>
           <a class="btn ghost" id="manualBtn" href="#" onclick="document.getElementById('btcAddress').scrollIntoView();return false">Show address</a>
         </div>
