@@ -8,48 +8,118 @@
   <style>
     :root{ --bg:#021217; --card:#07121a; --muted:#98b8c6; --accent:#1fbf76; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace }
     html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;color:#e9f7ef}
-    body{background-image: url('/assets/background.png');background-size:cover;background-position:center center;background-attachment:fixed;}
-    .wrap{max-width:900px;margin:28px auto;padding:20px}
-    .card{background:rgba(2,6,10,0.64);backdrop-filter:blur(6px);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.5)}
-    h1{margin:0 0 6px 0;font-size:22px}
-    p.sub{color:var(--muted);margin:0 0 16px 0}
-    .donation-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-    .btc-box{background:linear-gradient(180deg,#07292e,#0f4d5a);padding:14px;border-radius:10px;min-width:260px;display:flex;flex-direction:column;gap:8px}
-    .addr{font-family:var(--mono);word-break:break-all;background:rgba(0,0,0,0.12);padding:8px;border-radius:8px;font-weight:700}
-    .btn{appearance:none;border:0;padding:10px 12px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#0fa564);color:#022b1d;font-weight:800;cursor:pointer;font-family:var(--mono)}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .qr{width:160px;height:160px;background:#fff;padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+    body{
+      background-image:url('/assets/background.png');
+      background-size:cover;
+      background-position:center center;
+      background-attachment:fixed;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+    .wrap{max-width:900px;width:100%;padding:20px}
+    .card{
+      background:rgba(2,6,10,0.64);
+      backdrop-filter:blur(6px);
+      padding:28px 26px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:0 8px 28px rgba(0,0,0,0.55);
+    }
+    h1{margin:0 0 8px 0;font-size:24px}
+    p.sub{color:var(--muted);margin:0 0 20px 0;line-height:1.5}
+    .donation-row{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;justify-content:space-between}
+    .btc-box{
+      background:linear-gradient(180deg,#07292e,#0f4d5a);
+      padding:18px;
+      border-radius:10px;
+      min-width:260px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex:1;
+    }
+    .addr{
+      font-family:var(--mono);
+      word-break:break-all;
+      background:rgba(0,0,0,0.12);
+      padding:10px;
+      border-radius:8px;
+      font-weight:700;
+      font-size:14px;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      background:linear-gradient(180deg,var(--accent),#0fa564);
+      color:#022b1d;
+      font-weight:800;
+      cursor:pointer;
+      font-family:var(--mono);
+      transition:transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    .ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--muted);
+    }
+    .qr{
+      width:180px;
+      height:180px;
+      background:#fff;
+      padding:10px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
     .qr img{width:100%;height:100%;object-fit:contain;display:block}
-    .note{color:var(--muted);font-size:13px;margin-top:12px}
-    @media (max-width:640px){.donation-row{flex-direction:column}.qr{width:140px;height:140px}}
+    .note{color:var(--muted);font-size:13px;margin-top:14px;line-height:1.4}
+    .header-flex{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+    @media (max-width:700px){
+      .qr{width:140px;height:140px}
+      .donation-row{flex-direction:column;align-items:center}
+      .btc-box{width:100%}
+      h1{text-align:center}
+      .header-flex{text-align:center;justify-content:center}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div class="header-flex">
         <div>
-          <h1 style="margin:0">Support SDJ Classroom</h1>
+          <h1>Support SDJ Classroom</h1>
           <p class="sub">Your support helps keep the site running. If you'd like to help, here's a quick way to donate in Bitcoin.</p>
         </div>
-        <div style="min-width:120px;text-align:right">
-          <a href="/" class="btn ghost" style="padding:8px 12px;">Back to home</a>
-        </div>
+        <a href="/" class="btn ghost" style="white-space:nowrap;">Back to home</a>
       </div>
 
       <div class="donation-row">
         <div class="btc-box">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-            <div style="font-weight:800">Bitcoin (BTC)</div>
+            <div style="font-weight:800;font-size:15px;">Bitcoin (BTC)</div>
             <button id="copyBtn" class="btn" aria-label="Copy Bitcoin address">Copy</button>
           </div>
           <div id="btcAddress" class="addr">bc1q5zahdsl823avqws8w283sh3d4usl97v3ru4tcj</div>
           <div class="note">Tip: click Copy to copy the address to your clipboard.</div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
-          <div class="qr" id="qrContainer" aria-hidden="true">
-            <!-- Restored the original static QR provider so it renders consistently -->
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;">
+          <div class="qr" id="qrContainer">
             <a href="https://www.bitcoinqrcodemaker.com" target="_blank" rel="noopener noreferrer">
               <img id="qrImg" src="https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&amp;address=bc1q5zahdsl823avqws8w283sh3d4usl97v3ru4tcj" alt="Bitcoin QR code" title="bitcoin:bc1q5zahdsl823avqws8w283sh3d4usl97v3ru4tcj">
             </a>
@@ -58,7 +128,7 @@
         </div>
       </div>
 
-      <p class="note">If you'd prefer another payment method or have questions about supporting the site, <a href="/pages/support.html" style="color:var(--accent)">contact us</a>.</p>
+      <p class="note" style="margin-top:24px;">If you'd prefer another payment method or have questions about supporting the site, <a href="/pages/support.html" style="color:var(--accent)">contact us</a>.</p>
     </div>
   </div>
 
