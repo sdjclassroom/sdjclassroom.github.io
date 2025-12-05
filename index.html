@@ -516,6 +516,18 @@
             </div>
           </article>
 
+          <article class="software" role="article" aria-labelledby="title-geometry" data-key="GeometryDash">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-geometry">Geometry Dash</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite GeometryDash" title="Favorite">☆</button>
+            </div>
+            <div class="meta">Learn momentum</div>
+              <div class="card-actions">
+              <button class="btn play" data-geometry="true" type="button">Start</button>
+              <a class="btn ghost" href="pages/details/GeometryDash.html">Download</a>
+            </div>
+          </article>
+
           <article class="software" role="article" aria-labelledby="title-dino" data-key="dinosuar">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
               <h3 id="title-dino">Dinosuar</h3>
@@ -945,6 +957,12 @@
               loadSlope();
               return;
             }
+            // GeometryDash embed
+            if (btn.hasAttribute('data-geometry')) {
+              ev.preventDefault();
+              loadGeometryDash();
+              return;
+            }
             // Dinosuar embed
             if (btn.hasAttribute('data-dino')) {
               ev.preventDefault();
@@ -1051,6 +1069,41 @@
         };
         iframe.onerror = function() { hideLoader(); };
         iframe.src = 'pages/support.html';
+        inner.appendChild(iframe);
+      }
+
+      // GeometryDash loader
+      function loadGeometryDash() {
+        const display = document.getElementById('display');
+        showLoader('Loading Geometry Dash...');
+        display.classList.remove('placeholder');
+        clearPreviousLoader();
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading Geometry Dash...';
+        inner.appendChild(loading);
+        const iframe = document.createElement('iframe');
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+          loading.remove();
+          iframe.style.display = 'block';
+          hideLoader();
+        };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = 'pages/GeometryDash.html';
         inner.appendChild(iframe);
       }
 
