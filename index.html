@@ -345,6 +345,7 @@
     }
 
     .controls-row { display:flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .controls-row .btn.ghost { background: rgba(80,80,80,0.4); }
 
   .box { background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.02); }
     .box h4 { margin: 0 0 8px 0; color: var(--accent); }
@@ -453,6 +454,16 @@
       border-radius: 10px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.06);
       margin-bottom: 8px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .site-banner span {
+      display: inline-block;
+      animation: scroll-left 30s linear infinite;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
     }
     @media (max-width: 520px) {
       .site-banner { font-size: 13px; padding: 6px 8px; }
@@ -462,7 +473,7 @@
 <body>
   <a class="sr-only" href="#main">Skip to content</a>
   <div class="site-banner" role="status" aria-live="polite">
-    Check back every day for more games. Please<a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">Donate</a>
+    <span>🎉 Exciting Update: New Tetris Game Added! Check back daily for fresh content. Suggestions welcome! Support us with a <a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">donation</a>.</span>
   </div>
         <style>
       #aadsstickymfq0apur:checked + div {
@@ -516,9 +527,9 @@
             </div>
           </article>
 
-          <article class="software" role="article" aria-labelledby="title-slope" data-key="slope">
+          <article class="software" role="article" aria-labelledby="title-tetris" data-key="tetris">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-              <h3 id="title-slope">Tetris</h3>
+              <h3 id="title-tetris">Tetris</h3>
               <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Slope" title="Favorite">☆</button>
             </div>
             <div class="meta">Learn how to design shapes</div>
