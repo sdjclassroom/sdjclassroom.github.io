@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — SDJ Classroom</title>
+  <link rel="icon" href="/assets/favicon.png">
+  <style>
+    :root{ --bg:#021217; --card:#07121a; --muted:#98b8c6; --accent:#1fbf76; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;color:#e9f7ef}
+    body{
+      background-image:url('/assets/background.png');
+      background-size:cover;
+      background-position:center center;
+      background-attachment:fixed;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+    .wrap{max-width:900px;width:100%;padding:20px}
+    .card{
+      background:rgba(2,6,10,0.64);
+      backdrop-filter:blur(6px);
+      padding:28px 26px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:0 8px 28px rgba(0,0,0,0.55);
+    }
+    h1{margin:0 0 8px 0;font-size:24px}
+    p.sub{color:var(--muted);margin:0 0 20px 0;line-height:1.5}
+    .header-flex{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      background:linear-gradient(180deg,var(--accent),#0fa564);
+      color:#022b1d;
+      font-weight:800;
+      cursor:pointer;
+      font-family:var(--mono);
+      transition:transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    .ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--muted);
+    }
+    @media (max-width:700px){
+      h1{text-align:center}
+      .header-flex{text-align:center;justify-content:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="header-flex">
+        <div>
+          <h1>Contact Us</h1>
+          <p class="sub">Have questions or need support? Get in touch with us.</p>
+        </div>
+        <a href="/" class="btn ghost" style="white-space:nowrap;">Back to home</a>
+      </div>
+
+      <p>If you have any questions about the site, donations, or need help, feel free to reach out.</p>
+      <p>You can contact us via email at: <a href="mailto:support@sdjclassroom.com" style="color:var(--accent)">support@sdjclassroom.com</a></p>
+      <p>Or visit our support page for more information.</p>
+    </div>
+  </div>
+</body>
+</html>
