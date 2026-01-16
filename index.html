@@ -237,7 +237,7 @@
     .left .small { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 
   /* responsive grid for course cards */
-  .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .softwares { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; padding-bottom: 20px; }
     .software {
       background: var(--card-gradient);
       padding: 18px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.04);
@@ -327,7 +327,7 @@
       touch-action: manipulation;
     }
     .btn.play { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color: #022b1d; }
-    .btn.ghost { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.03); }
+    .btn.ghost { background: rgba(0,0,0,0.4); color: #e9f7ef; border: 1px solid rgba(255,255,255,0.1); }
     .btn:hover { filter: brightness(1.04); }
     .btn:active { transform: translateY(1px); }
     .btn:focus { outline: 3px solid rgba(31,191,118,0.12); outline-offset: 3px; }
@@ -459,7 +459,7 @@
     }
     .site-banner span {
       display: inline-block;
-      animation: scroll-left 30s linear infinite;
+      animation: scroll-left 45s linear infinite;
     }
     @keyframes scroll-left {
       0% { transform: translateX(100%); }
@@ -467,6 +467,10 @@
     }
     @media (max-width: 520px) {
       .site-banner { font-size: 13px; padding: 6px 8px; }
+      .site-banner span { animation-duration: 60s; }
+    }
+    @media (min-width: 1200px) {
+      .site-banner span { animation-duration: 35s; }
     }
   </style>
 </head>
@@ -559,6 +563,18 @@
           <iframe data-aa='2421055' src='//acceptable.a-ads.com/2421055/?size=Adaptive'
                             style='border:0; padding:0; width:70%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
         </div>
+          </article>
+
+          <article class="software" role="article" aria-labelledby="title-cookie" data-key="cookie">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-cookie">Cookie Clicker</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Cookie" title="Favorite">☆</button>
+            </div>
+            <div class="meta">Learn cookie management and web storage</div>
+            <div class="card-actions">
+              <button class="btn play" data-cookie="true" type="button">Start</button>
+              <a class="btn ghost" href="pages/Cookie.html">Download</a>
+            </div>
           </article>
 
           <article class="software" role="article" aria-labelledby="title-appel" data-key="appel">
@@ -1014,6 +1030,12 @@
               loadAppel();
               return;
             }
+            // Cookie embed
+            if (btn.hasAttribute('data-cookie')) {
+              ev.preventDefault();
+              loadCookie();
+              return;
+            }
             // Dinosuar embed
             if (btn.hasAttribute('data-dino')) {
               ev.preventDefault();
@@ -1231,6 +1253,41 @@
         };
         iframe.onerror = function() { hideLoader(); };
         iframe.src = 'pages/Appel.html';
+        inner.appendChild(iframe);
+      }
+
+      // Cookie loader (embed pages/Cookie.html)
+      function loadCookie() {
+        const display = document.getElementById('display');
+        showLoader('Loading Cookie...');
+        display.classList.remove('placeholder');
+        clearPreviousLoader();
+        let inner = display.querySelector('.emulator-inner');
+        if (!inner) {
+          display.innerHTML = '';
+          inner = document.createElement('div');
+          inner.className = 'emulator-inner';
+          display.appendChild(inner);
+        } else {
+          inner.innerHTML = '';
+        }
+        const loading = document.createElement('div');
+        loading.style.cssText = 'font-family:var(--mono);color:var(--muted);font-size:13px;padding:8px;text-align:center;';
+        loading.textContent = 'Loading Cookie...';
+        inner.appendChild(loading);
+        const iframe = document.createElement('iframe');
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+          loading.remove();
+          iframe.style.display = 'block';
+          hideLoader();
+        };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = 'pages/Cookie.html';
         inner.appendChild(iframe);
       }
 
