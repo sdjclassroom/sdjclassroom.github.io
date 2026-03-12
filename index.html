@@ -477,7 +477,7 @@
 <body>
   <a class="sr-only" href="#main">Skip to content</a>
   <div class="site-banner" role="status" aria-live="polite">
-    <span>🎉 Exciting Update: New Cookie Course Added! Check back daily for fresh content. Suggestions welcome! Support us with a <a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">donation</a>.</span>
+    <span>🎉 Exciting Update: New Papa's Pizzeria Course Added! Check back daily for fresh content. Suggestions welcome! Support us with a <a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">donation</a>.</span>
   </div>
         <style>
       #aadsstickymfq0apur:checked + div {
@@ -572,6 +572,18 @@
             <div class="card-actions">
               <button class="btn play" data-rom="https://raw.githubusercontent.com/SethJ152/Flappy-Bird-GBA/main/game.gba" data-core="mgba" type="button">Start</button>
               <a class="btn ghost" href="https://raw.githubusercontent.com/SethJ152/Flappy-Bird-GBA/main/game.gba">Download</a>
+            </div>
+          </article>
+
+          <!-- External URL game option under Flappy -->
+          <article class="software" role="article" aria-labelledby="title-script" data-key="script-link">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-script">Papa's Pizzeria</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Script Demo" title="Favorite">☆</button>
+            </div>
+            <div class="meta">Learn web development with this interactive demo</div>
+            <div class="card-actions">
+              <button class="btn play" data-url="https://script.google.com/macros/s/AKfycbxN6EVQbtkjn6NUiIyJscLGTyyMyAUABzuB_kp4relIe6rr9B8eWmlnlvDsBVtiRa5pPg/exec" data-title="External Script" type="button">Start</button>
             </div>
           </article>
 
@@ -1021,6 +1033,31 @@
         display.appendChild(inner);
       }
 
+      // Generic URL loader: embed an arbitrary link inside #display
+      function loadURL(src, title) {
+        showLoader('Loading content...');
+        clearPreviousLoader();
+        display.classList.remove('placeholder');
+        display.innerHTML = '';
+        const inner = document.createElement('div');
+        inner.className = 'emulator-inner';
+        inner.style.alignItems = 'center';
+        inner.style.padding = '8px';
+
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = '0';
+        iframe.allow = 'fullscreen';
+        if (title) iframe.setAttribute('title', title);
+        iframe.onload = function() { hideLoader(); };
+        iframe.onerror = function() { hideLoader(); };
+        iframe.src = src;
+
+        inner.appendChild(iframe);
+        display.appendChild(inner);
+      }
+
       // Attach listeners to play buttons (works for dynamic elements too)
       function attachPlayButtons() {
         document.querySelectorAll('button.play, a.btn.play').forEach(btn => {
@@ -1075,6 +1112,14 @@
               ev.preventDefault();
               const g = btn.getAttribute('data-game');
               if (g === 'snake') { loadSnake(); return; }
+            }
+            // External link loader
+            if (btn.hasAttribute('data-url')) {
+              ev.preventDefault();
+              const url = btn.getAttribute('data-url');
+              const title = btn.getAttribute('data-title') || '';
+              loadURL(url, title);
+              return;
             }
             // EmulatorJS
             const rom = btn.getAttribute('data-rom') || btn.getAttribute('href') || null;
