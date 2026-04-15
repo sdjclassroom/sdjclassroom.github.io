@@ -478,7 +478,7 @@
 <body>
   <a class="sr-only" href="#main">Skip to content</a>
   <div class="site-banner" role="status" aria-live="polite">
-    <span>🎉 Exciting Update: New Papa's Pizzeria Course Added! Check back daily for fresh content. Suggestions welcome! Support us with a <a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">donation</a>.</span>
+    <span>🎉 Exciting Update: New Retro Bowl Course Added! Check back daily for fresh content. Suggestions welcome! Support us with a <a href="/pages/donate.html" style="color:inherit;text-decoration:underline;font-weight:900;margin-left:8px">donation</a>.</span>
   </div>
         <style>
       #aadsstickymfq0apur:checked + div {
@@ -529,6 +529,19 @@
             <div class="card-actions">
               <button class="btn play" data-slope="true" type="button">Start</button>
               <a class="btn ghost" href="pages/aboutus.html">Download</a>
+            </div>
+          </article>
+
+          <!-- External URL game option under Flappy -->
+          <article class="software" role="article" aria-labelledby="title-script" data-key="script-link">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 id="title-script">Retro Bowl</h3>
+              <button class="btn ghost fav-btn" aria-pressed="false" aria-label="Favorite Script Demo" title="Favorite">☆</button>
+            </div>
+            <div class="meta">Learn web development with this interactive demo</div>
+            <div class="card-actions">
+              <button class="btn play" data-url="https://classroomlesson.github.io/basic-ruffle-player/html/retro_bowl/index.html" data-title="External Script" type="button">Start</button>
+              <a class="btn ghost" href="https://classroomlesson.github.io/basic-ruffle-player/html/retro_bowl/index.html">Download</a>
             </div>
           </article>
 
@@ -1103,6 +1116,7 @@
         iframe.style.height = '100%';
         iframe.style.border = '0';
         iframe.allow = 'fullscreen; gamepad; microphone; camera; accelerometer; gyroscope; magnetometer; xr-spatial-tracking; vr';
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-popups allow-presentation allow-modals allow-pointer-lock');
         iframe.tabIndex = 0;
         if (title) iframe.setAttribute('title', title);
         iframe.onload = function() { 
